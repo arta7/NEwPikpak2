@@ -60,11 +60,31 @@ import {Redux} from './Redux/Data'
 import realm from './UI/Common/realm'
 import ProviderMovesControl from './UI/Provider/ProviderMovesControl'
 
+
+import UserContext from './UI/Context/UserContext';
+
 export default function App ()  {
   // const value = useContext(Redux);
   // const [context, setContext] = useContext(Redux);
   const [NoticCount, setNoticCount] = useState('0');
   const [ctrl, setctrl] = useState(0);
+
+  // const [userData, setUserData] = useState([
+  //   {
+     
+  //       user_id: '',
+  //       username: '',
+  //       password: '',
+  //       type: '',
+  //       facebook_id: '',
+  //       google_id: '',
+  //       email: '',
+  //       role: '',
+  //       status:0,
+  //       InlineStatus:0,
+  //       badgeCount:0,
+  //       CurrentPage:0
+  //       }]);
  
   let interval
 
@@ -586,8 +606,9 @@ const AppContainer= createAppContainer(AppNavigator);
 
     return (
       
-     
+      // <UserContext.Provider value={{ userData, setUserData }}>
       <AppContainer   />
+      // </UserContext.Provider>
       // :
       // <ActivityIndicator size='large' color='red' style={{justifyContent:'center',alignItems:'center',alignItems:'center'}} />
       

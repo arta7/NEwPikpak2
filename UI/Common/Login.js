@@ -21,6 +21,9 @@ import { LoginData } from '../../Redux/LoginData';
 import Modal from 'react-native-modal';
 import Loading_Data from '../../Components/LoadingData';
 import Toast from 'react-native-simple-toast';
+import UserContext from '../Context/UserContext';
+
+
 // import RNRestart from 'react-native-restart';
 // import App from './../../App'
 
@@ -33,9 +36,38 @@ const Login = (props)=> {
   const [Loader_Visible, setLoader_Visible] = useState(false)
   const[IsSecures,setIsSecure] = useState(true)
 
+  const { userData, setUserData } = React.useContext(UserContext);
+
 
  
 
+
+
+  const updateState = (itemuserid) => {
+
+    console.log('test1',userData)
+    var newState = userData.map((item, idx) => {
+        return {
+          ...item,
+          user_id: itemuserid 
+          != null ? itemuserid : item.user_id ,
+        username: itemusername != null ? itemusername : item.username,
+        password: itempassword != null ? itempassword : item.password,
+        type: itemtype != null ? itemtype : item.type,
+        facebook_id: itemfacebookid != null ? itemfacebookid : item.facebook_id,
+        google_id: itemgoogleid != null ? itemgoogleid : item.google_id,
+        email: itememail != null ? itememail : item.email,
+        role: itemrole != null ? itemrole : item.role,
+        status:itemstatus != null ? itemstatus : item.status,
+        InlineStatus:itemInlineStatus != null ? itemInlineStatus : item.InlineStatus,
+        badgeCount:itembadgeCount != null ? itembadgeCount : item.badgeCount,
+        CurrentPage:itemCurrentPage != null ? itemCurrentPage : item.CurrentPage
+        }
+      }
+    )
+    console.log('test2',newState)
+    setUserData(newState)
+  }
 
   let GetUserStatus = async()=> {
     
@@ -80,9 +112,9 @@ const Login = (props)=> {
             
       console.log('************\n', response, '************\n')  
             
-      LoginData.user_id = '';
-      LoginData.username = '';
-      LoginData.role = '';
+      userData[0].LoginData.user_id = '';
+      userData[0].LoginData.username = '';
+      userData[0].LoginData.role = '';
       console.log('**-------***')
 
       if(response.data.status == 1) {
@@ -327,7 +359,11 @@ const Login = (props)=> {
                 t_FontSize = {20} t_FontWeight = {'bold'} 
                 t_ButtonTitle = {'LOGIN'} t_Elevation = {3} 
                 t_TextColor = {'white'} HasIcon = {false}
-                Function = {()=>{UserLogin(username, password, 'default')}}/>
+                Function = {()=>{
+                  updateState(1)
+                 // UserLogin(username, password, 'default')
+                  
+                  }}/>
 
       </View>
 
