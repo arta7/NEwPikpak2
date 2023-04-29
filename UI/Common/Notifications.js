@@ -13,11 +13,19 @@ import { LoginData } from '../../Redux/LoginData';
 import axios from 'axios';
 import { APIMaster } from '../../API/APIMaster';
 
+import BlogContext from './../../BlogContext';
+
+import {updateStates} from './../../Redux/Functions'
+
+
+
 
 const Notifications = (props) => {
 
   const [NotificationEnable, setNotificationEnable] = useState(true)
   const [Notification, setNotification] = useState([])
+
+  const { userData, setUserData } = React.useContext(BlogContext);
    
   let GetNotification = async()=>{
     var axiosConfig = {
@@ -28,7 +36,7 @@ const Notifications = (props) => {
      }
      axios.get(APIMaster.URL + 
       APIMaster.NotificationsSetting.GetPushNotifications +
-      LoginData.user_id
+      userData[0].user_id
         )
       .then((response)=> {
         setNotification(response.data.push_notifications)
@@ -48,7 +56,7 @@ const Notifications = (props) => {
      }
      axios.get(APIMaster.URL + 
       APIMaster.NotificationsSetting.ReadAllNotifications +
-      LoginData.user_id
+      userData[0].user_id
         )
       .then((response)=> {
         
@@ -69,7 +77,7 @@ const Notifications = (props) => {
       }
      }
      var params = {
-       "user_id":LoginData.user_id
+       "user_id": userData[0].user_id
      }
 
      axios.post(APIMaster.URL + 

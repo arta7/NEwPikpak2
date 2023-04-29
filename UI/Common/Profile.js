@@ -20,6 +20,11 @@ import Toast from 'react-native-simple-toast';
 import Loading_Data from '../../Components/LoadingData';
 import ImagePicker from 'react-native-image-picker';
 
+import BlogContext from './../../BlogContext';
+
+import {updateStates} from './../../Redux/Functions'
+
+
 
 const Profile = (props) => {
 
@@ -31,6 +36,8 @@ const Profile = (props) => {
   const [UserPic, setUserPic] = useState(null)
   const [UserPicFN, setUserPicFN] = useState(null)
   const [file_uri, setfile_uri] = useState("./../../Image/person.png")
+
+  const { userData, setUserData } = React.useContext(BlogContext);
   // const [UPic, setUPic] = useState(require(filePath.toString()))
 
   const [Loader_Visible, setLoader_Visible] = useState(false)
@@ -109,7 +116,7 @@ const Profile = (props) => {
      }
     axios.get(APIMaster.URL +
       // APIMaster.User.GetUserProfile + LoginData.user_id, axiosConfig)
-      APIMaster.User.GetUserProfile + LoginData.user_id, axiosConfig)
+      APIMaster.User.GetUserProfile + userData[0].user_id, axiosConfig)
    .then((response)=> {
            
            console.log(response)  
@@ -175,7 +182,7 @@ const Profile = (props) => {
       }
      }
     axios.post(APIMaster.URL +
-      APIMaster.User.SetUserProfile + LoginData.user_id, params, axiosConfig)
+      APIMaster.User.SetUserProfile + userData[0].user_id, params, axiosConfig)
    .then((response)=> {
            
            console.log(response)  

@@ -18,12 +18,19 @@ import axios from 'axios';
 import { APIMaster } from '../../API/APIMaster';
 import Toast from 'react-native-simple-toast';
 
+import BlogContext from './../../BlogContext';
+
+import {updateStates} from './../../Redux/Functions'
+
 const ChangePassword = (props) => {
 
   const _email = useRef(null)
 
   const [email, setEmail] = useState('')
   const [Loader_Visible, setLoader_Visible] = useState(false)
+
+
+  const { userData, setUserData } = React.useContext(BlogContext);
 
   let BlurControls=()=>{
     _email.current.blur()

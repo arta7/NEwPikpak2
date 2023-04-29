@@ -18,16 +18,27 @@ import { MoveLocationsData, LocationData, DefaultLocationData } from '../../Redu
 import SelectLocation from '../Common/SelectLocation';
 import { CurrentMove, MoveData } from '../../Redux/MoveData';
 
+import BlogContext from './../../BlogContext';
+
+import {updateStates} from './../../Redux/Functions'
+
 
 const Messages = (props) => {
  
   const [MessageText, setMessageText] = useState('')
 
   const [MessageList, setMessageList] = useState([])
+
+
+  const { userData, setUserData } = React.useContext(BlogContext);
+
+  
   const flatListRef = useRef(null)
 
   const [counter, setCounter] = useState(0);
   const timer = useRef(null);
+
+
 
   let GetMessagesList = ()=>{
     
@@ -36,7 +47,7 @@ const Messages = (props) => {
     var params = {
       move_id : LoginData.move_id,
       receiver_id : '6169772b18165f6d673c9312',
-      sender_id : LoginData.user_id
+      sender_id : userData[0].user_id
     }
 
   
@@ -76,7 +87,7 @@ const Messages = (props) => {
     var params = {
       move_id : LoginData.move_id,
       receiver_id : '6169772b18165f6d673c9312',
-      sender_id : LoginData.user_id,
+      sender_id : userData[0].user_id,
       message : _message,
       time : new Date().getTime,
       message_id : '1'

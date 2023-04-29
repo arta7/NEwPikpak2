@@ -14,11 +14,17 @@ import { LoginData } from '../../Redux/LoginData';
 import axios from 'axios';
 import { APIMaster } from '../../API/APIMaster';
 
+import BlogContext from './../../BlogContext';
+
+import {updateStates} from './../../Redux/Functions'
+
+
 
 const NotificationSetting = (props) => {
 
   const [NotificationEnable, setNotificationEnable] = useState(true)
-
+  
+  const { userData, setUserData } = React.useContext(BlogContext);
 
   
 
@@ -72,7 +78,7 @@ setNotificationEnable(!_notification_status)
 
 let Set_Notification_Setting=(_status)=>{
   setNotificationEnable(!_status)
-  SetNotificationSetting(LoginData.user_id, !_status ? "on" : "off")
+  SetNotificationSetting( userData[0].user_id, !_status ? "on" : "off")
 }
 
 

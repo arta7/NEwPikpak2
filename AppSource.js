@@ -17,36 +17,42 @@ import {
 } from 'react-native';
 
 import App from './App';
+import Login from './UI/Common/Login';
 import {Redux} from './Redux/Data'
 import PushController from './PushController';
-import UserContext from './UI/Context/UserContext';
+// import UserContext from './UI/Context/UserContext';
+
+import  {BlogProvider}  from './BlogContext';
+
+
+// const BlogContext = React.createContext();
 const AppSource  = (props) => {
      // const value = useContext(Redux);
       // const [context, setContext] = useState(0);
 
-      const [userData, setUserData] = useState([
-        {
+      // const [userData, setUserData] = useState([
+      //   {
          
-            user_id: '',
-            username: '',
-            password: '',
-            type: '',
-            facebook_id: '',
-            google_id: '',
-            email: '',
-            role: '',
-            status:0,
-            InlineStatus:0,
-            badgeCount:0,
-            CurrentPage:0
-            }]);
+      //       user_id: '',
+      //       username: '',
+      //       password: '',
+      //       type: '',
+      //       facebook_id: '',
+      //       google_id: '',
+      //       email: '',
+      //       role: '',
+      //       status:0,
+      //       InlineStatus:0,
+      //       badgeCount:0,
+      //       CurrentPage:0
+      //       }]);
 
   return (
-    <UserContext.Provider value={{ userData, setUserData }}>
+    <BlogProvider >
      <App />
-  
+    
      <PushController/>
-     </UserContext.Provider>
+     </BlogProvider >
   );
 };
 

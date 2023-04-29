@@ -21,8 +21,9 @@ import { LoginData } from '../../Redux/LoginData';
 import Modal from 'react-native-modal';
 import Loading_Data from '../../Components/LoadingData';
 import Toast from 'react-native-simple-toast';
-import UserContext from '../Context/UserContext';
+import BlogContext from './../../BlogContext';
 
+import {updateStates} from './../../Redux/Functions'
 
 // import RNRestart from 'react-native-restart';
 // import App from './../../App'
@@ -36,38 +37,38 @@ const Login = (props)=> {
   const [Loader_Visible, setLoader_Visible] = useState(false)
   const[IsSecures,setIsSecure] = useState(true)
 
-  const { userData, setUserData } = React.useContext(UserContext);
+  const { userData, setUserData } = React.useContext(BlogContext);
 
 
  
 
 
 
-  const updateState = (itemuserid) => {
+  // const updateState = (itemuserid,itemusername,itempassword,itemtype,itemfacebookid,itemgoogleid,itememail,itemrole,itemstatus,itemInlineStatus,itembadgeCount,itemCurrentPage) => {
 
-    console.log('test1',userData)
-    var newState = userData.map((item, idx) => {
-        return {
-          ...item,
-          user_id: itemuserid 
-          != null ? itemuserid : item.user_id ,
-        username: itemusername != null ? itemusername : item.username,
-        password: itempassword != null ? itempassword : item.password,
-        type: itemtype != null ? itemtype : item.type,
-        facebook_id: itemfacebookid != null ? itemfacebookid : item.facebook_id,
-        google_id: itemgoogleid != null ? itemgoogleid : item.google_id,
-        email: itememail != null ? itememail : item.email,
-        role: itemrole != null ? itemrole : item.role,
-        status:itemstatus != null ? itemstatus : item.status,
-        InlineStatus:itemInlineStatus != null ? itemInlineStatus : item.InlineStatus,
-        badgeCount:itembadgeCount != null ? itembadgeCount : item.badgeCount,
-        CurrentPage:itemCurrentPage != null ? itemCurrentPage : item.CurrentPage
-        }
-      }
-    )
-    console.log('test2',newState)
-    setUserData(newState)
-  }
+  //   console.log('test1',userData)
+  //   var newState = userData.map((item, idx) => {
+  //       return {
+  //         ...item,
+  //         user_id: itemuserid 
+  //         != null ? itemuserid : item.user_id ,
+  //       username: itemusername != null ? itemusername : item.username,
+  //       password: itempassword != null ? itempassword : item.password,
+  //       type: itemtype != null ? itemtype : item.type,
+  //       facebook_id: itemfacebookid != null ? itemfacebookid : item.facebook_id,
+  //       google_id: itemgoogleid != null ? itemgoogleid : item.google_id,
+  //       email: itememail != null ? itememail : item.email,
+  //       role: itemrole != null ? itemrole : item.role,
+  //       status:itemstatus != null ? itemstatus : item.status,
+  //       InlineStatus:itemInlineStatus != null ? itemInlineStatus : item.InlineStatus,
+  //       badgeCount:itembadgeCount != null ? itembadgeCount : item.badgeCount,
+  //       CurrentPage:itemCurrentPage != null ? itemCurrentPage : item.CurrentPage
+  //       }
+  //     }
+  //   )
+  //   console.log('test2',newState)
+  //   setUserData(newState)
+  // }
 
   let GetUserStatus = async()=> {
     
@@ -112,9 +113,9 @@ const Login = (props)=> {
             
       console.log('************\n', response, '************\n')  
             
-      userData[0].LoginData.user_id = '';
-      userData[0].LoginData.username = '';
-      userData[0].LoginData.role = '';
+      userData[0].user_id = '';
+      userData[0].username = '';
+      userData[0].role = '';
       console.log('**-------***')
 
       if(response.data.status == 1) {
@@ -137,18 +138,22 @@ const Login = (props)=> {
 
   let changestate=async()=>{
     var x = await setLoader_Visible(false)
-    var x1 = await  AsyncStorage.setItem("user_id",LoginData.user_id)
-    var y = await  AsyncStorage.setItem("username",LoginData.username)
-     var z = await AsyncStorage.setItem("role",LoginData.role)
+    var x1 = await  AsyncStorage.setItem("user_id",userData[0].user_id)
+    var y = await  AsyncStorage.setItem("username",userData[0].username)
+     var z = await AsyncStorage.setItem("role",userData[0].role)
   }
 
   let UserLogin = async(_username, _password, _type)=> {
-    LoginData.username = _username;  
+    // LoginData.username = _username; 
+    updateStates(userData,setUserData,null,_username)
+
     let InlineStatus = await AsyncStorage.getItem("InlineStatus")
    // BlurControls()
    if(InlineStatus != null && InlineStatus != '')
    {
-     LoginData.InlineStatus = InlineStatus
+    //  LoginData.InlineStatus = InlineStatus
+     updateStates(userData,setUserData,null,null,null,null,null,null,null,null,null,InlineStatus)
+
    }
   
 
@@ -163,14 +168,14 @@ const Login = (props)=> {
     axios.post(APIMaster.URL + APIMaster.Auth.Login, params)
     .then((response)=> {
      
-      console.log('response.data.data._id',response.data)  
+      console.log('response.data.status',response.data.status)  
             
       if(response.data.status == 1) {
        
        
-        LoginData.user_id = response.data.data._id;
+        // LoginData.user_id = response.data.data._id;
         //response.data.data.username;
-          LoginData.role = response.data.data.role;
+          // LoginData.role = response.data.data.role;
 
       
           
@@ -179,20 +184,29 @@ const Login = (props)=> {
         
         if(response.data.data) {
 
-          AsyncStorage.setItem("user_id",LoginData.user_id)
-           AsyncStorage.setItem("username",LoginData.username)
-           AsyncStorage.setItem("role",LoginData.role)
+          AsyncStorage.setItem("user_id",userData[0].user_id)
+           AsyncStorage.setItem("username",userData[0].username)
+           AsyncStorage.setItem("role",userData[0].role)
+
+           updateStates(userData,setUserData,response.data.data._id,_username,null,null,null,null,null,response.data.data.role)
+           
+          
  
         }
        
         setLoader_Visible(false)
         Toast.show(response.data.message)
-        CheckUserActive(LoginData.username,null,null)
+        CheckUserActive(userData[0].username,null,null)
       }
-      else if(response.data.message!= 'Invalid username or password')
+
+      else if(response.data.message != 'Invalid username or password' && response.data.status == 0 )
       {
-        CheckUserActive(LoginData.username,null,null)
+        CheckUserActive(userData[0].username,null,null)
       }
+      // else
+      // {
+
+      // }
       setLoader_Visible(false)
        Toast.show(response.data.message)
      
@@ -276,23 +290,26 @@ const Login = (props)=> {
       }
     }
 
-    axios.get(APIMaster.URL + APIMaster.ProfessionalDetail.GetProfessionalDetail + LoginData.user_id, axiosConfig)
+    axios.get(APIMaster.URL + APIMaster.ProfessionalDetail.GetProfessionalDetail + userData[0].user_id, axiosConfig)
     .then((response)=> {
 
       Toast.show(response.data.message)
-      LoginData.status = response.data.status;
-      if(response.data.status == 0 && (LoginData.role == 'provider') ) {
-        if(LoginData.InlineStatus == 0)
+      // LoginData.status = response.data.status;
+      updateStates(userData,setUserData,null,null,null,null,null,null,null,null,response.data.status)
+      if(response.data.status == 0 && (userData[0].role == 'provider') ) {
+        if(userData[0].InlineStatus == 0)
         props.navigation.replace('ProfessionalDetails')
         else
         {
-          LoginData.InlineStatus = -1;
+          // LoginData.InlineStatus = -1;
+          updateStates(userData,setUserData,null,null,null,null,null,null,null,null,null,-1)
         props.navigation.replace('Home')
         }
         }
       else
       {
-        LoginData.InlineStatus = -1;
+        // LoginData.InlineStatus = -1;
+        updateStates(userData,setUserData,null,null,null,null,null,null,null,null,null,-1)
         props.navigation.replace('Home')
       }
     })
@@ -360,8 +377,8 @@ const Login = (props)=> {
                 t_ButtonTitle = {'LOGIN'} t_Elevation = {3} 
                 t_TextColor = {'white'} HasIcon = {false}
                 Function = {()=>{
-                  updateState(1)
-                 // UserLogin(username, password, 'default')
+                  // updateState(1)
+                 UserLogin(username, password, 'default')
                   
                   }}/>
 

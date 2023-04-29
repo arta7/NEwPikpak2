@@ -36,7 +36,13 @@ import Polyline from '@mapbox/polyline';
 import AsyncStorage from '@react-native-community/async-storage';
 import Modal from 'react-native-modal';
 import { EditMoveData, MoveData,CurrentMove } from '../../Redux/MoveData';
-import { event } from 'react-native-reanimated';
+// import { event } from 'react-native-reanimated';
+import BlogContext from './../../BlogContext';
+
+import {updateStates} from './../../Redux/Functions'
+
+
+
 import realm from './realm';
 let FisrtLoading = true
 let Location_History = []
@@ -50,8 +56,9 @@ const Home = (props) => {
         }
   })
 
-  // const value = useContext(Redux);
-  // const [context, setContext] = useContext(Redux);
+  const { userData, setUserData } = React.useContext(BlogContext);
+
+
   const drawer=useRef(null)
   const IsDriver = true
   const SearchBar = useRef(null)
@@ -337,10 +344,14 @@ let ResetMoveData=()=>{
       }
     }
    
-    axios.get(APIMaster.URL + APIMaster.ProfessionalDetail.GetProfessionalDetail + LoginData.user_id, axiosConfig)
+    axios.get(APIMaster.URL + APIMaster.ProfessionalDetail.GetProfessionalDetail + userData[0].user_id, axiosConfig)
     .then((response)=> {
-        LoginData.status = response.data.status;
-        LoginData.InlineStatus=response.data.status;
+        // LoginData.status = response.data.status;
+        updateStates(userData,setUserData,null,null,null,null,null,null,null,null,response.data.status,response.data.status)
+
+        // LoginData.InlineStatus=response.data.status;
+
+
         
         
     })
@@ -360,7 +371,7 @@ let ResetMoveData=()=>{
       // if(ShowNotification == false)
      
       GetAvailableMoveList() ;
-      if(LoginData.role == 'provider')
+      if(userData[0].role == 'provider')
       GetProfessionalDetails()
 
     
@@ -390,7 +401,7 @@ let ResetMoveData=()=>{
       }
      }
      axios.get(APIMaster.URL + 
-      APIMaster.Move.GetAvailableMoveList + LoginData.user_id + '?latitude='
+      APIMaster.Move.GetAvailableMoveList + userData[0].user_id + '?latitude='
        +LocationData.current_latitude
       +'&longitude='+ LocationData.current_longitude
         , axiosConfig)
@@ -439,11 +450,14 @@ let ResetMoveData=()=>{
      }
      axios.get(APIMaster.URL + 
       APIMaster.NotificationsSetting.GetPushNotifications +
-      LoginData.user_id
+      userData[0].user_id
         )
       .then((response)=> {
          
-        LoginData.badgeCount = response.data.badge == undefined ?'0':response.data.badge.toString()
+        // LoginData.badgeCount = response.data.badge == undefined ?'0':response.data.badge.toString()
+
+        updateStates(userData,setUserData,null,null,null,null,null,null,null,null,null,null
+        ,response.data.badge == undefined ?'0':response.data.badge.toString())
         // console.log(' LoginData.badgeCount', LoginData.badgeCount)
         // value.Counter.setCount(response.data.badge)
         add_Data(response.data.badge == undefined ?'0':response.data.badge.toString())
@@ -469,7 +483,7 @@ let ResetMoveData=()=>{
      }
      axios.get(APIMaster.URL + 
       APIMaster.NotificationsSetting.ReadAllNotifications +
-      LoginData.user_id
+      userData[0].user_id
         )
       .then((response)=> {
         
@@ -537,7 +551,7 @@ let ResetMoveData=()=>{
           
           onMapReady = { () =>  mapView.current != null ?  _mapReady() : null }
           >
-      {(LoginData.role == 'provider') &&
+      {(userData[0].role == 'provider') &&
           MovesList.map((item, index)=>
           
           <MapView.Marker
@@ -579,7 +593,7 @@ let ResetMoveData=()=>{
         </TouchableOpacity>
 
         
-        {(LoginData.role != 'provider') &&
+        {(userData[0].role != 'provider') &&
         
         <View style = {{width: wp('100%'), backgroundColor: 'transparent', overflow: 'hidden', position: 'absolute', top: hp('10%')}}>
 

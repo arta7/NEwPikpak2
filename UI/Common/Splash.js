@@ -11,7 +11,15 @@ import { LocationData } from '../../Redux/LocationData';
 import Toast from 'react-native-simple-toast';
 import { APIMaster } from '../../API/APIMaster';
 import axios from 'axios';
+import BlogContext from './../../BlogContext';
+import {updateStates} from './../../Redux/Functions'
+
+
+
 const Splash = (props) => {
+
+  const { userData, setUserData } = React.useContext(BlogContext);
+
 
   const hasLocationPermission = async () => {
 
@@ -78,13 +86,16 @@ const Splash = (props) => {
     }
   }
 
+
+  
+
   let getUserData = async()=> {
     
     let User_Id =  await AsyncStorage.getItem("user_id")
     let Username =  await AsyncStorage.getItem("username")
     let Role = await AsyncStorage.getItem("role")
    let InlineStatus = await AsyncStorage.getItem("InlineStatus")
-    console.log('User Id is : ', LoginData.user_id)
+    console.log('User Id is : ', userData[0].user_id)
 
    if(InlineStatus != null && InlineStatus !='')
    {
@@ -94,19 +105,21 @@ const Splash = (props) => {
 
     if(User_Id != '' && User_Id != null) {
 
-      LoginData.user_id = User_Id.toString();
-      LoginData.username = Username.toString()
-      LoginData.role = Role.toString()
+       console.log('test async')
+       updateStates(userData,setUserData,User_Id.toString(),Username.toString(),null,null,null,null,null,Role.toString())
+      // LoginData.user_id = User_Id.toString();
+      // LoginData.username = Username.toString()
+      // LoginData.role = Role.toString()
      
 
     }
   }
 
   let CallNextScreen = ()=> { 
-     console.log('LoginData.user_id',LoginData.user_id)
-    if(LoginData.user_id != null && LoginData.user_id != '') 
+     console.log('LoginData.user_id',userData[0].user_id)
+    if(userData[0].user_id != null && userData[0].user_id != '') 
     {  
-      CheckUserActive(LoginData.username,null,null)
+      CheckUserActive(userData[0].username,null,null)
     }
     else 
     {
@@ -159,13 +172,13 @@ const Splash = (props) => {
         }
         else
         {
-          props.navigation.navigate('SignUp')
+          props.navigation.replace('SignUp')
           props.navigation.navigate('ActiveAccount')
         }
       }
       else
       {
-        props.navigation.navigate('SignUp')
+        props.navigation.replace('SignUp')
         props.navigation.navigate('ActiveAccount')
       }
 
@@ -186,20 +199,22 @@ const Splash = (props) => {
       }
     }
    
-    axios.get(APIMaster.URL + APIMaster.ProfessionalDetail.GetProfessionalDetail + LoginData.user_id, axiosConfig)
+    axios.get(APIMaster.URL + APIMaster.ProfessionalDetail.GetProfessionalDetail + userData[0].user_id, axiosConfig)
     .then((response)=> {
 
       // Toast.show(response.data.message)
-        LoginData.status = response.data.status;
-      if(response.data.status == 0 && LoginData.role == 'provider') {
+        // LoginData.status = response.data.status;
+        updateStates(userData,setUserData,null,null,null,null,null,null,null,null,response.data.status)
+      if(response.data.status == 0 && userData[0].role == 'provider') {
 
-        if(LoginData.InlineStatus == 0)
+        if(userData[0].InlineStatus == 0)
         props.navigation.replace('ProfessionalDetails')
         else
         {
         props.navigation.replace('Home')
         
         LoginData.InlineStatus=-1;
+        updateStates(userData,setUserData,null,null,null,null,null,null,null,null,null,-1)
         }
         }
       else {

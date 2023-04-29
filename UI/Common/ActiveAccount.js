@@ -19,12 +19,19 @@ import { APIMaster } from '../../API/APIMaster';
 import Toast from 'react-native-simple-toast';
 import { LoginData } from '../../Redux/LoginData';
 
+
+import BlogContext from './../../BlogContext';
+
+import {updateStates} from './../../Redux/Functions'
+
 const ChangePassword = (props) => {
 
   const _email = useRef(null)
 
   const [active, setactive] = useState('')
   const [Loader_Visible, setLoader_Visible] = useState(false)
+
+  const { userData, setUserData } = React.useContext(BlogContext);
 
   let BlurControls=()=>{
     _email.current.blur()
@@ -40,12 +47,13 @@ const ChangePassword = (props) => {
       }
     }
 
-    axios.get(APIMaster.URL + APIMaster.ProfessionalDetail.GetProfessionalDetail + LoginData.user_id, axiosConfig)
+    axios.get(APIMaster.URL + APIMaster.ProfessionalDetail.GetProfessionalDetail + userData[0].user_id, axiosConfig)
     .then((response)=> {
 
       Toast.show(response.data.message,Toast.LONG)
-      LoginData.status = response.data.status;
-      if(response.data.status == 0 && (LoginData.role == 'provider'))
+      // LoginData.status = response.data.status;
+      updateStates(userData,setUserData,null,null,null,null,null,null,null,null,response.data.status)
+      if(response.data.status == 0 && (userData[0].role == 'provider'))
        {
 
         props.navigation.navigate('ProfessionalDetails')
@@ -157,7 +165,7 @@ const ChangePassword = (props) => {
                 t_FontSize = {20} t_FontWeight = {'bold'} 
                 t_ButtonTitle = {'Submit'} t_Elevation = {3} 
                 t_TextColor = {'white'} HasIcon = {false}
-                Function = {()=>{UserActive(LoginData.username,active,null)}}/>
+                Function = {()=>{UserActive(userData[0].username,active,null)}}/>
                 
 
       </View>
@@ -165,14 +173,14 @@ const ChangePassword = (props) => {
       // onPress={()=>{UserActive(LoginData.username,null,1)}}
       >
         <Text style={{fontSize:18,textAlign:'center',color:'gray'}}>We Send The Activation Code to </Text>
-        <Text style={{fontSize:18,textAlign:'center',color:'gray'}}> {LoginData.email}</Text>
+        <Text style={{fontSize:18,textAlign:'center',color:'gray'}}> {userData[0].email}</Text>
       </View>
       <View style = {{width: '100%', height: hp('2%'), justifyContent: 'center', alignItems: 'center',marginTop:20,flexDirection:'row'}}
      
       >
        <Text style={{fontSize:16,textAlign:'center',color:'gray'}}>Don't Get The Code?</Text>
        <TouchableOpacity style = {{}}
-        onPress={()=>{UserActive(LoginData.username,null,1)}}
+        onPress={()=>{UserActive(userData[0].username,null,1)}}
       >
         <Text style={{fontSize:16,textAlign:'center',color:'blue'}}>Send Again?</Text>
         </TouchableOpacity>

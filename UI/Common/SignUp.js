@@ -20,6 +20,11 @@ import Toast from 'react-native-simple-toast';
 import { TextInputMask } from 'react-native-masked-text'
 
 
+import BlogContext from './../../BlogContext';
+
+import {updateStates} from './../../Redux/Functions'
+
+
 let EmailIsCorrect = false;
 
 
@@ -35,6 +40,9 @@ const Signup = (props) => {
   const _zipCode = useRef(null)
 
   const [IsConsumer, setIsConsumer] = useState(false)
+
+  const { userData, setUserData } = React.useContext(BlogContext);
+
   const [IsDriver, setIsDriver] = useState(false)
 
   const [Role, setRole] = useState('')
@@ -245,13 +253,17 @@ const Signup = (props) => {
             
             Toast.show(response.data.message)
             setLoader_Visible(false)
-            LoginData.user_id = response.data.data._id;
-            LoginData.username = response.data.data.username;
-            LoginData.role = response.data.data.role;
-            LoginData.email = _email;
+            // LoginData.user_id = response.data.data._id;
+            // LoginData.username = response.data.data.username;
+            // LoginData.role = response.data.data.role;
+            // LoginData.email = _email;
+
+             updateStates(userData,setUserData,response.data.data._id,response.data.data.username
+              ,null,null,null,null,_email,response.data.data.role)
+
             // LoginData.Code = code;
             // CheckUserActive();
-            console.log(LoginData.user_id)
+            console.log(userData[0].user_id)
             console.log('************')
             console.log(response.data.data._id)
             

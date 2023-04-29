@@ -28,6 +28,10 @@ import { GoogleMaps } from '../../Redux/GoogleMapsData';
 import { MoveData, CurrentMove } from '../../Redux/MoveData';
 import NativeIntentAndroid from 'react-native/Libraries/Linking/NativeLinking'
 
+import BlogContext from './../../BlogContext';
+import {updateStates} from './../../Redux/Functions'
+
+
 
 const ActiveMoveDetails = (props) => {
 
@@ -63,13 +67,15 @@ const ActiveMoveDetails = (props) => {
   const mapView = useRef(null);
   const [UpdateScreen, setUpdateScreen] = useState(1)
 
+  const { userData, setUserData } = React.useContext(BlogContext);
+
   
   let CancleBid =(move_id, bid_id)=>{
     
     console.log('Cancle Bid methode called')
   
     var params = {
-        user_id: LoginData.user_id,
+        user_id: userData[0].user_id,
         move_id: move_id,
         bid_id: bid_id,
         reason: 'reason'
@@ -197,7 +203,7 @@ let GetPaymentCardList =()=>{
     }
    }
 
-  axios.get(APIMaster.URL + APIMaster.PaymentCard.PaymentCardList + LoginData.user_id)
+  axios.get(APIMaster.URL + APIMaster.PaymentCard.PaymentCardList + userData[0].user_id)
   .then((response)=> {
           
          console.log('response.data.payment_cards :',response.data.payment_cards)

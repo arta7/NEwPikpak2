@@ -19,6 +19,11 @@ import Modal from 'react-native-modal';
 import Toast from 'react-native-simple-toast';
 import { CurrentMove } from '../../Redux/MoveData';
 
+
+import BlogContext from './../../BlogContext';
+
+import {updateStates} from './../../Redux/Functions'
+
 const ActiveMove = (props) => {
 
   const [Loader_Visible, setLoader_Visible] = useState(false)
@@ -28,6 +33,8 @@ const ActiveMove = (props) => {
   const [QouteComment, SetQouteComment] = useState('Test')
   const [QouteWeight, SetQouteWeight] = useState(5)
   const [RouteDistance, SetRouteDistance] = useState(121)
+
+  const { userData, setUserData } = React.useContext(BlogContext);
   
   
   const [moveList, setMoveList] = useState([])
@@ -56,7 +63,7 @@ const ActiveMove = (props) => {
       }
      }
     axios.get(APIMaster.URL +
-      APIMaster.Move.GetMyQoutesList + LoginData.user_id + '/processing', axiosConfig)
+      APIMaster.Move.GetMyQoutesList + userData[0].user_id + '/processing', axiosConfig)
    .then((response)=> {
            
            console.log('Active move',response.data.bids)  

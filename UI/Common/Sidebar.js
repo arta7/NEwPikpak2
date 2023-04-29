@@ -15,6 +15,9 @@ import axios from 'axios';
 import { APIMaster } from '../../API/APIMaster';
 import AsyncStorage from '@react-native-community/async-storage';
 import { ScrollView } from 'react-native-gesture-handler';
+import {updateStates} from './../../Redux/Functions'
+import BlogContext from './../../BlogContext';
+
 
 
 
@@ -22,11 +25,15 @@ const App = (props) => {
 
   const [PerfessionalDetailNotApproved_Visible, setPerfessionalDetailNotApproved_Visible] = useState(false)
   const  [fileUri, setFileUri] = useState()
+  const { userData, setUserData } = React.useContext(BlogContext);
+
 
   // const [UserType, setUserType] = useState(false)
   let isDriver = AppSetting.IsDriver
 
   useEffect(()=>{
+   console.log('userData sidebar',userData)
+
     GetUserProfile()
   }, [])
 
@@ -44,7 +51,7 @@ const App = (props) => {
       }
      }
     axios.get(APIMaster.URL +
-      APIMaster.User.GetUserProfile + LoginData.user_id, axiosConfig)
+      APIMaster.User.GetUserProfile +  userData[0].user_id, axiosConfig)
    .then((response)=> {
            
            console.log(response)  
@@ -69,7 +76,7 @@ const App = (props) => {
     
 
     var params = {
-      user_id: LoginData.user_id
+      user_id:  userData[0].user_id
     }
     
     console.log(params)
@@ -81,9 +88,12 @@ const App = (props) => {
             console.log(response)  
             
 
-            LoginData.user_id = '';
-            LoginData.username = '';
-            LoginData.role = '';
+            // LoginData.user_id = '';
+            // LoginData.username = '';
+            // LoginData.role = '';
+
+
+            updateStates(userData,setUserData,'','',null,null,null,null,null,'')
 
 
             if(response.data.status == 1)
@@ -100,9 +110,11 @@ const App = (props) => {
       console.log('Error : ',error)  
      
     })
-    LoginData.user_id = '';
-    LoginData.username = '';
-    LoginData.role = '';
+    // LoginData.user_id = '';
+    // LoginData.username = '';
+    // LoginData.role = '';
+    updateStates(userData,setUserData,'','',null,null,null,null,null,'')
+
     props.closeItem()
     // props.navigator.navigate('Home')
     // console.log('test logout')
@@ -112,7 +124,7 @@ const App = (props) => {
 
   let GetPerfessionalDetail = async()=>{
     var params = {
-      user_id : LoginData.user_id
+      user_id :  userData[0].user_id
     }
     var axiosConfig = {
       headers:{
@@ -121,7 +133,7 @@ const App = (props) => {
       }
      }
     axios.get(APIMaster.URL +
-      APIMaster.ProfessionalDetail.GetProfessionalDetail + LoginData.user_id, axiosConfig)
+      APIMaster.ProfessionalDetail.GetProfessionalDetail +  userData[0].user_id, axiosConfig)
    .then((response)=> {
            
            console.log(response)  
@@ -172,7 +184,7 @@ const App = (props) => {
 
         <View style={{width: '100%', height: '20%', backgroundColor: '#FFF'}}>
           
-          <Text style={[styles.TextStyle,{color: '#4152B2', fontWeight: 'bold', fontSize: wp('4.5%')}]}>{LoginData.username}</Text>
+          <Text style={[styles.TextStyle,{color: '#4152B2', fontWeight: 'bold', fontSize: wp('4.5%')}]}>{userData[0].username}</Text>
 
         </View>
         
@@ -193,7 +205,7 @@ const App = (props) => {
       <SidebarItem IconName = {'arrow-all'} IconType = {'material-community'} Title = {'Moves'} 
                    Function = {()=>{
                     props.closeItem()  
-                    LoginData.role == 'provider' ? props.navigator.navigate('ProviderMovesControl') :
+                    userData[0].role == 'provider' ? props.navigator.navigate('ProviderMovesControl') :
                     
                     props.navigator.navigate('MovesControl')}}/>
 
@@ -207,28 +219,28 @@ const App = (props) => {
                      props.closeItem()
                                     props.navigator.navigate('Profile')}}/>
 
-      {LoginData.role == 'provider' &&
+      { userData[0].role == 'provider' &&
       <SidebarItem IconName = {'account-tie'} IconType = {'material-community'} Title = {'Manage Professional Detail'}
                    Function = {()=>{
                     props.closeItem()  
                     GetPerfessionalDetail()}} />
       }
 
-      {LoginData.role != 'provider' &&
+      { userData[0].role != 'provider' &&
       <SidebarItem IconName = {'credit-card'} IconType = {'material-community'} Title = {'Manage Card'}  
                    Function = {()=>{
                     props.closeItem()  
                     props.navigator.navigate('ManageCard')}} />
       }
 
-      {LoginData.role == 'provider' &&
+      { userData[0].role == 'provider' &&
       <SidebarItem IconName = {'credit-card'} IconType = {'material-community'} Title = {'Manage Merchant Detail'} 
                    Function = {()=>{
                     props.closeItem()  
                     props.navigator.navigate('MerchantDetail')}}/>
       }
 
-      {LoginData.role != 'provider' &&
+      { userData[0].role != 'provider' &&
       <SidebarItem IconName = {'credit-card-clock'} IconType = {'material-community'} Title = {'Payment Details'} 
                    Function = {()=>{
                     props.closeItem()  
@@ -236,7 +248,7 @@ const App = (props) => {
                     }}/>
       }
 
-      {LoginData.role == 'provider' &&
+      { userData[0].role == 'provider' &&
       <SidebarItem IconName = {'credit-card-clock'} IconType = {'material-community'} Title = {'Earning Detail'} 
                    Function = {()=>{}}/>
       }
@@ -255,7 +267,7 @@ const App = (props) => {
                   }}/>
 
       <SidebarItem IconName = {'power'} IconType = {'material-community'} Title = {'Logout'}           
-                   Function = {()=>{UserLogout(LoginData.user_id)}}/> 
+                   Function = {()=>{UserLogout( userData[0].user_id)}}/> 
 
 
       <View style = {{width: '100%', height: '30%', justifyContent: 'center', alignItems: 'center', backgroundColor: ColorPalet.MainBackground}}>

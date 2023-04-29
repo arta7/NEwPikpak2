@@ -14,6 +14,11 @@ import { APIMaster } from '../../API/APIMaster';
 import AsyncStorage from '@react-native-community/async-storage';
 import Toast from 'react-native-simple-toast';
 
+import BlogContext from './../../BlogContext';
+
+import {updateStates} from './../../Redux/Functions'
+
+
 const ChangePassword = (props) => {
 
   
@@ -24,6 +29,9 @@ const ChangePassword = (props) => {
   const [oldPassword, setOldPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+
+
+  const { userData, setUserData } = React.useContext(BlogContext);
 
   let BlurControls=()=>{
     _oldPassword.current.blur()
@@ -49,7 +57,7 @@ const ChangePassword = (props) => {
     }
     else
     {
-      ChangePassword(LoginData.user_id, oldPassword, newPassword)
+      ChangePassword(userData[0].user_id, oldPassword, newPassword)
     }
   }
 
