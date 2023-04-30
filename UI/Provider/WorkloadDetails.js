@@ -29,6 +29,11 @@ import { GoogleMaps } from '../../Redux/GoogleMapsData';
 import { MoveData, CurrentMove } from '../../Redux/MoveData';
 
 
+import BlogContext from './../../BlogContext';
+import {updateStates} from './../../Redux/Functions'
+
+
+
 let PickupLatitude
 let PickupLongitude
 
@@ -37,6 +42,8 @@ let DeliveryLongitude
 
 
 const ProviderMoveDetails = (props) => {
+
+  const { userData, setUserData } = React.useContext(BlogContext);
 
   const [Loader_Visible, setLoader_Visible] = useState(false)
 
@@ -233,7 +240,7 @@ let getDirections = async(startLoc, destinationLoc)=> {
 const animateMap = (lat, lng) => {
   if(mapView.current != null)
   {
-    if(LocationData.current_latitude != 0)
+    if(userData[0].current_latitude != 0)
     {
   mapView.current.animateToRegion({ 
       
@@ -250,7 +257,7 @@ const animateMap = (lat, lng) => {
 let  _mapReady = () => {
 
   if(CurrentMove.pickup_description == '' && CurrentMove.delivery_description == '') {
-    animateMap(LocationData.current_latitude, LocationData.current_longitude)
+    animateMap(userData[0].current_latitude, userData[0].current_longitude)
   }
   else if(CurrentMove.pickup_description != '' && CurrentMove.delivery_description == '') {
     animateMap(CurrentMove.pickup_latitude, CurrentMove.pickup_longitude)
@@ -494,8 +501,8 @@ let BidSelection=(Id)=>
 <MapView  style={{ ...StyleSheet.absoluteFillObject }}
           ref = {mapView}
           initialRegion={{
-            longitude: LocationData.current_longitude,
-            latitude: LocationData.current_latitude,
+            longitude: userData[0].current_longitude,
+            latitude: userData[0].current_latitude,
             latitudeDelta: 30,
             longitudeDelta: 0.0421}}
           showsUserLocation = {true}

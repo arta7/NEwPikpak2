@@ -23,7 +23,7 @@ import Loading_Data from '../../Components/LoadingData';
 import Toast from 'react-native-simple-toast';
 import BlogContext from './../../BlogContext';
 
-import {updateStates} from './../../Redux/Functions'
+import {updateStates,updateLocationState} from './../../Redux/Functions'
 
 // import RNRestart from 'react-native-restart';
 // import App from './../../App'
@@ -69,6 +69,22 @@ const Login = (props)=> {
   //   console.log('test2',newState)
   //   setUserData(newState)
   // }
+
+  let updaetDataes=async()=>{
+    updateLocationState(userData,setUserData,null,2)
+
+    
+       updateStates(userData,setUserData,1)
+
+     
+    // UserLogin(username, password, 'default')
+    //  var y = await updateLocationState(userData,setUserData,1)
+
+
+   }
+   
+
+
 
   let GetUserStatus = async()=> {
     
@@ -145,18 +161,18 @@ const Login = (props)=> {
 
   let UserLogin = async(_username, _password, _type)=> {
     // LoginData.username = _username; 
-    updateStates(userData,setUserData,null,_username)
+   
 
     let InlineStatus = await AsyncStorage.getItem("InlineStatus")
    // BlurControls()
    if(InlineStatus != null && InlineStatus != '')
    {
     //  LoginData.InlineStatus = InlineStatus
-     updateStates(userData,setUserData,null,null,null,null,null,null,null,null,null,InlineStatus)
+    updateStates(userData,setUserData,null,null,null,null,null,null,null,null,null,InlineStatus)
 
    }
   
-
+    // updateStates(userData,setUserData,null,_username)
    setLoader_Visible(true)
     
     var params = {
@@ -177,21 +193,13 @@ const Login = (props)=> {
         //response.data.data.username;
           // LoginData.role = response.data.data.role;
 
-      
-          
-       
-         
-        
+          updateStates(userData,setUserData,response.data.data._id,_username,null,null,null,null,null,response.data.data.role)
+
         if(response.data.data) {
 
           AsyncStorage.setItem("user_id",userData[0].user_id)
-           AsyncStorage.setItem("username",userData[0].username)
+           AsyncStorage.setItem("username",_username)
            AsyncStorage.setItem("role",userData[0].role)
-
-           updateStates(userData,setUserData,response.data.data._id,_username,null,null,null,null,null,response.data.data.role)
-           
-          
- 
         }
        
         setLoader_Visible(false)
@@ -377,9 +385,11 @@ const Login = (props)=> {
                 t_ButtonTitle = {'LOGIN'} t_Elevation = {3} 
                 t_TextColor = {'white'} HasIcon = {false}
                 Function = {()=>{
-                  // updateState(1)
-                 UserLogin(username, password, 'default')
-                  
+                  // updateStates(userData,setUserData,1)
+                // UserLogin(username, password, 'default')
+              //  updateLocationState(userData,setUserData,1)
+
+              updaetDataes()
                   }}/>
 
       </View>

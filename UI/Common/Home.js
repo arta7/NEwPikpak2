@@ -39,7 +39,7 @@ import { EditMoveData, MoveData,CurrentMove } from '../../Redux/MoveData';
 // import { event } from 'react-native-reanimated';
 import BlogContext from './../../BlogContext';
 
-import {updateStates} from './../../Redux/Functions'
+import {updateStates,updateLocationState,updateMoveLocationState} from './../../Redux/Functions'
 
 
 
@@ -77,8 +77,8 @@ const Home = (props) => {
   });
   let SrcSet = false
   let mapRegion = {
-    longitude: LocationData.current_longitude,
-    latitude: LocationData.current_latitude,
+    longitude: userData[0].current_longitude,
+    latitude: userData[0].current_latitude,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421
   }
@@ -159,8 +159,11 @@ const Home = (props) => {
              DefaultLocationData.default_latitude = pos.coords.latitude
              DefaultLocationData.default_longitude =   pos.coords.longitude
 
-            LocationData.current_latitude = pos.coords.latitude
-            LocationData.current_longitude =  pos.coords.longitude
+            // LocationData.current_latitude = pos.coords.latitude
+            // LocationData.current_longitude =  pos.coords.longitude
+
+            updateLocationState(userData,setUserData,pos.coords.latitude,pos.coords.longitude)
+            
 
             setPosition({
               latitude: pos.coords.latitude,
@@ -211,8 +214,12 @@ const Home = (props) => {
         ResetEditMoveData()
         ResetMoveLocationsData()
 
-        MoveLocationsData.delivery_latitude = result.data.result.geometry.location.lat
-        MoveLocationsData.delivery_longitude = result.data.result.geometry.location.lng
+        // MoveLocationsData.delivery_latitude = result.data.result.geometry.location.lat
+        // MoveLocationsData.delivery_longitude = result.data.result.geometry.location.lng
+
+        updateMoveLocationState(userData,setUserData,null,result.data.result.geometry.location.lat,result.data.result.geometry.location.lng)
+
+        
 
         DefaultLocationData.default_latitude = result.data.result.geometry.location.lat
         DefaultLocationData.default_longitude = result.data.result.geometry.location.lng
@@ -229,12 +236,13 @@ const Home = (props) => {
 
   let ResetMoveLocationsData=()=>{
     // MoveLocationsData.delivery_description = '',
-    MoveLocationsData.delivery_latitude = 0,
-    MoveLocationsData.delivery_longitude = 0,
-    MoveLocationsData.pickup_description = '',
-    MoveLocationsData.pickup_latitude = 0,
-    MoveLocationsData.pickup_longitude = 0,
-    MoveLocationsData.distance = 0
+    // MoveLocationsData.delivery_latitude = 0,
+    // MoveLocationsData.delivery_longitude = 0,
+    // MoveLocationsData.pickup_description = '',
+    // MoveLocationsData.pickup_latitude = 0,
+    // MoveLocationsData.pickup_longitude = 0,
+    // MoveLocationsData.distance = 0
+    updateMoveLocationState(userData,setUserData,'',0,0,'',0,0,0)
   }
 
   let ResetEditMoveData=()=>{
@@ -402,8 +410,8 @@ let ResetMoveData=()=>{
      }
      axios.get(APIMaster.URL + 
       APIMaster.Move.GetAvailableMoveList + userData[0].user_id + '?latitude='
-       +LocationData.current_latitude
-      +'&longitude='+ LocationData.current_longitude
+       +userData[0].current_latitude
+      +'&longitude='+ userData[0].current_longitude
         , axiosConfig)
       .then((response)=> {
     // console.log('Get Place Lat & long')
@@ -505,12 +513,12 @@ let ResetMoveData=()=>{
      console.log('mapView.current',mapView.current)
     if(mapView.current != null)
     {
-      if(LocationData.current_latitude != 0)
+      if(userData[0].current_latitude != 0)
       {
     mapView.current.animateToRegion({ 
         
-      latitude: LocationData.current_latitude,
-      longitude:  LocationData.current_longitude,
+      latitude: userData[0].current_latitude,
+      longitude:  userData[0].current_longitude,
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421,
 
@@ -541,8 +549,8 @@ let ResetMoveData=()=>{
         <MapView  style={{ ...StyleSheet.absoluteFillObject }}
           ref = {mapView}
           initialRegion={{
-            longitude:  LocationData.current_longitude,
-            latitude:  LocationData.current_latitude,
+            longitude:  userData[0].current_longitude,
+            latitude:  userData[0].current_latitude,
             latitudeDelta: 30,
             longitudeDelta: 0.0421}}
           showsUserLocation = {true}

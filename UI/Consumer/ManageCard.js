@@ -18,6 +18,9 @@ import Modal from 'react-native-modal';
 import Loading_Data from '../../Components/LoadingData';
 import { LoginData } from '../../Redux/LoginData';
 
+import BlogContext from './../../BlogContext';
+import {updateStates} from './../../Redux/Functions'
+
 
 let SelectedCardId = ''
 const ManageCard = (props) => {
@@ -34,8 +37,10 @@ const ManageCard = (props) => {
     // {_id: 5, number: 'Card #5', type: 'xxxx xxxx xxxx xxxx', expire_date: '', default: 0}
   ])
 
+  const { userData, setUserData } = React.useContext(BlogContext);
   
-  
+
+
   let GetPaymentCardList =()=>{
     setLoader_Visible(true)
     
@@ -46,7 +51,7 @@ const ManageCard = (props) => {
       }
      }
 
-    axios.get(APIMaster.URL + APIMaster.PaymentCard.PaymentCardList + LoginData.user_id)
+    axios.get(APIMaster.URL + APIMaster.PaymentCard.PaymentCardList + userData[0].user_id)
     .then((response)=> {
             
             if(response.data.status == 1)
@@ -74,7 +79,7 @@ const ManageCard = (props) => {
   let SetCardAsDefault =(_card_id)=>{
     
     var params = {
-      user_id : LoginData.user_id,
+      user_id : userData[0].user_id,
       id : _card_id
     }
     var axiosConfig = {

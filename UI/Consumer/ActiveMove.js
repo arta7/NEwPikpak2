@@ -21,7 +21,6 @@ import { CurrentMove } from '../../Redux/MoveData';
 
 
 import BlogContext from './../../BlogContext';
-
 import {updateStates} from './../../Redux/Functions'
 
 const ActiveMove = (props) => {

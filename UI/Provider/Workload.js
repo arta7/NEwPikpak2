@@ -20,11 +20,18 @@ import { LocationData } from '../../Redux/LocationData';
 import { LoginData } from '../../Redux/LoginData';
 import Loading_Data from '../../Components/LoadingData';
 
+import BlogContext from './../../BlogContext';
+import {updateStates} from './../../Redux/Functions'
+
 
 const Workload = (props) => {
 
   const [WorkloadList, setWorkloadList] = useState([])
   const [Loader_Visible, setLoader_Visible] = useState(false)
+
+  const { userData, setUserData } = React.useContext(BlogContext);
+
+
   let icon_size = wp('6%')
   let drawer=useRef(null)
 
@@ -49,7 +56,7 @@ const Workload = (props) => {
       }
      }
     axios.get(APIMaster.URL +
-      APIMaster.Move.GetWorkloadList + LoginData.user_id , axiosConfig)
+      APIMaster.Move.GetWorkloadList + userData[0].user_id , axiosConfig)
    .then((response)=> {
            
            console.log('response workLoad : ',response.data)  

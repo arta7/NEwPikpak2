@@ -24,8 +24,16 @@ import { LocationData } from '../../Redux/LocationData';
 import { LoginData } from '../../Redux/LoginData';
 import Loading_Data from '../../Components/LoadingData';
 
+
+import BlogContext from './../../BlogContext';
+import {updateStates} from './../../Redux/Functions'
+
 const ProviderMoves = (props) => {
   const [Loader_Visible, setLoader_Visible] = useState(false)
+
+
+  const { userData, setUserData } = React.useContext(BlogContext);
+
 // const [BidsCount, SetBidsCount] = useState(0)
 // const [MoveTypeTitle, SetMoveTypeTitle] = useState('Business Deliveries')
 // const [MoveDateTime, SetMoveDateTime] = useState('07/01/2021 02:49 PM')
@@ -60,10 +68,10 @@ let GetAvailableMoveList = async()=>{
     }
    }
    axios.get(APIMaster.URL + 
-    APIMaster.Move.GetAvailableMoveList + LoginData.user_id + '?latitude='+
-     LocationData.current_latitude
+    APIMaster.Move.GetAvailableMoveList + userData[0].user_id + '?latitude='+
+     userData[0].current_latitude
     +'&longitude='+
-     LocationData.current_longitude
+     userData[0].current_longitude
       , axiosConfig)
     .then((response)=> {
   console.log('Get Place Lat & long')

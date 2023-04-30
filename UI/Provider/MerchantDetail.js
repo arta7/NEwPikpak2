@@ -19,6 +19,10 @@ import Modal from 'react-native-modal';
 import Loading_Data from '../../Components/LoadingData';
 import Toast from 'react-native-simple-toast';
 
+import BlogContext from './../../BlogContext';
+import {updateStates} from './../../Redux/Functions'
+
+
 const MerchantDetail = (props) => {
 
   const _accountHolderName = useRef(null)
@@ -29,6 +33,8 @@ const MerchantDetail = (props) => {
   const [EditEnable, setEditEnable] = useState(false)
   const [IsFirst, setIsFirst] = useState(false)
   const [DeleteConfirm_Visible, setDeleteConfirm_Visible] = useState(false)
+
+  const { userData, setUserData } = React.useContext(BlogContext);
 
   const [BankAccountList, setBankAccountList] = useState([])
 
@@ -41,10 +47,10 @@ const MerchantDetail = (props) => {
 
 
   let GetMerchantDetail = async()=>{
-    console.log('=== ', LoginData.user_id)
+    console.log('=== ', userData[0].user_id)
     setLoader_Visible(true)
     var params = {
-      user_id : LoginData.user_id
+      user_id : userData[0].user_id
     }
     var axiosConfig = {
       headers:{
@@ -115,10 +121,10 @@ const MerchantDetail = (props) => {
                                 _account_number,
                                 _ifsc_code,
                                 _branch_address)=>{
-    console.log('=== ', LoginData.user_id)
+    console.log('=== ', userData[0].user_id)
     setLoader_Visible(true)
     var params = {
-                  user_id : LoginData.user_id,
+                  user_id : userData[0].user_id,
                   account_holder_name: _account_holder_name,
                   bank_name: _bank_name,
                   account_number: _account_number,
@@ -155,11 +161,11 @@ const MerchantDetail = (props) => {
           _account_number,
           _ifsc_code,
           _branch_address)=>{
-      console.log('=== ', LoginData.user_id)
+      console.log('=== ', userData[0].user_id)
       setLoader_Visible(true)
       var params = {
         id : _bank_account_id,
-        user_id : LoginData.user_id,
+        user_id : userData[0].user_id,
         account_holder_name: _account_holder_name,
         bank_name: _bank_name,
         account_number: _account_number,
@@ -220,7 +226,7 @@ const MerchantDetail = (props) => {
 
   let DeleteMerchantDetail = async(_user_id,
                                    _bank_account_id)=>{
-              console.log('=== ', LoginData.user_id)
+              console.log('=== ', userData[0].user_id)
               setDeleteConfirm_Visible(false)
               console.log('+++ ', _bank_account_id)
               setLoader_Visible(true)
@@ -329,7 +335,7 @@ const MerchantDetail = (props) => {
          if(IsFirst)
          {
            console.log('first')
-            SetMerchantDetail(LoginData.user_id,
+            SetMerchantDetail(userData[0].user_id,
                               AccountHolderName,
                               BankName,
                               AccountNumber,
@@ -340,7 +346,7 @@ const MerchantDetail = (props) => {
          else
          {
             EditMerchantDetail(BankAccount_Id,
-                                LoginData.user_id,
+              userData[0].user_id,
                                 AccountHolderName,
                                 BankName,
                                 AccountNumber,
@@ -488,7 +494,7 @@ const MerchantDetail = (props) => {
                   t_FontSize = {wp('3.5%')} t_FontWeight = {'200'} 
                   t_ButtonTitle = {'Yes'} t_Elevation = {3} 
                   t_TextColor = {'#339cff'} HasIcon = {false}
-                  Function = {()=>{ DeleteMerchantDetail(LoginData.user_id, BankAccount_Id) }}/>
+                  Function = {()=>{ DeleteMerchantDetail(userData[0].user_id, BankAccount_Id) }}/>
 
               </View>
             </View>

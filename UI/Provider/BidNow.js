@@ -22,11 +22,19 @@ import Loading_Data from '../../Components/LoadingData';
 import Modal from 'react-native-modal';
 import Toast from 'react-native-simple-toast';
 
+
+import BlogContext from './../../BlogContext';
+import {updateStates} from './../../Redux/Functions'
+
+
 const BidNow = (props) => {
 
 const [BidsCount, SetBidsCount] = useState(0)
+const { userData, setUserData } = React.useContext(BlogContext);
+
+
 const MoveId = props.navigation.state.params.move_id
-const UserId = LoginData.user_id; 
+const UserId = userData[0].user_id; 
 //props.navigation.state.params.user_id
 const MoveTypeTitle = props.navigation.state.params.move_type_title
 const MoveDateTime = props.navigation.state.params.move_date_time

@@ -29,6 +29,10 @@ import { GoogleMaps } from '../../Redux/GoogleMapsData';
 import { MoveData, CurrentMove } from '../../Redux/MoveData';
 
 
+import BlogContext from './../../BlogContext';
+import {updateStates} from './../../Redux/Functions'
+
+
 let PickupLatitude
 let PickupLongitude
 
@@ -39,6 +43,8 @@ let DeliveryLongitude
 const ProviderMoveDetails = (props) => {
 
   const [Loader_Visible, setLoader_Visible] = useState(false)
+
+  const { userData, setUserData } = React.useContext(BlogContext);
 
 const [BidsCount, SetBidsCount] = useState(0)
 const [MoveTypeTitle, SetMoveTypeTitle] = useState('')
@@ -79,9 +85,9 @@ const animateMap = (lat, lng) => {
 
 
 let GetMerchantDetail = async()=>{
-  console.log('=== ', LoginData.user_id)
+  console.log('=== ', userData[0].user_id)
   var params = {
-    user_id : LoginData.user_id
+    user_id : userData[0].user_id
   }
   var axiosConfig = {
     headers:{
@@ -111,7 +117,7 @@ let GetMerchantDetail = async()=>{
 
 let GetVehicleId = async()=>{
   var params = {
-    user_id : LoginData.user_id
+    user_id : userData[0].user_id
   }
   var axiosConfig = {
     headers:{
@@ -120,7 +126,7 @@ let GetVehicleId = async()=>{
     }
    }
   axios.get(APIMaster.URL +
-    APIMaster.ProfessionalDetail.GetProfessionalDetail + LoginData.user_id, axiosConfig)
+    APIMaster.ProfessionalDetail.GetProfessionalDetail + userData[0].user_id, axiosConfig)
  .then((response)=> {
          
          if(response.data.status == 1)
@@ -337,7 +343,7 @@ let BidSelection=(Id)=>
   let _mapReady = () => {
 
     if(CurrentMove.pickup_description == '' && CurrentMove.delivery_description == '') {
-      animateMap(LocationData.current_latitude, LocationData.current_longitude)
+      animateMap(userData[0].current_latitude, userData[0].current_longitude)
     }
     else if(CurrentMove.pickup_description != '' && CurrentMove.delivery_description == '') {
       animateMap(CurrentMove.pickup_latitude, CurrentMove.pickup_longitude)
@@ -393,9 +399,9 @@ let BidSelection=(Id)=>
                         ButtonTitle = {CurrentMove.provider_move_details_header == 'on' ? 'Bid Now' : 'Change'}
                         Function = {()=>{CurrentMove.provider_move_details_header == 'on' ? 
                         showBid==true ? 
-                      ((LoginData.status == 1  || LoginData.status == -1 ) && LoginData.InlineStatus != 0 ) ?
+                      ((userData[0].status == 1  || userData[0].status == -1 ) && userData[0].InlineStatus != 0 ) ?
                         props.navigation.navigate('BidNow', {move_id : CurrentMove.move_id,
-                                           user_id : LoginData.user_id,
+                                           user_id : userData[0].user_id,
                                           move_type_title : MoveTypeTitle,
                                         move_date_time : MoveDateTime,
                                         move_img : MoveImageUri.length > 0 ?  MoveImageUri[0].file_name : require("./../../Image/ImagePlaceholder.png"),
@@ -553,8 +559,8 @@ let BidSelection=(Id)=>
       <MapView  style={{ ...StyleSheet.absoluteFillObject }}
           ref = {mapView}
           initialRegion={{
-            longitude: LocationData.current_longitude,
-            latitude: LocationData.current_latitude,
+            longitude: userData[0].current_longitude,
+            latitude: userData[0].current_latitude,
             latitudeDelta: 30,
             longitudeDelta: 0.0421}}
           showsUserLocation = {true}

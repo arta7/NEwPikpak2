@@ -23,11 +23,20 @@ import Toast from 'react-native-simple-toast';
 import { LocationData } from '../../Redux/LocationData';
 import { LoginData } from '../../Redux/LoginData';
 import Loading_Data from '../../Components/LoadingData';
+
+import BlogContext from './../../BlogContext';
+import {updateStates} from './../../Redux/Functions'
+
+
+
 let _BidsList = []
 const OpenBids = (props) => {
 
 const [BidsList, setBidsList] = useState([])
-  // const [_BidsList, set_BidsList] = useState([])
+
+
+const { userData, setUserData } = React.useContext(BlogContext);
+
  
 let icon_size = wp('6%')
 const [Loader_Visible, setLoader_Visible] = useState(false)
@@ -135,7 +144,7 @@ let GetMyBidsList = async()=>{
     }
    }
    axios.get(APIMaster.URL + 
-    APIMaster.Bid.GetMyBidsList + LoginData.user_id + '/pending'  , axiosConfig)
+    APIMaster.Bid.GetMyBidsList + userData[0].user_id + '/pending'  , axiosConfig)
     .then((response)=> {
       console.log('Bids :', response) 
       console.log('Bids Length :', response.data.bids.length) 
@@ -174,7 +183,7 @@ let CancleBid =(move_id, bid_id)=>{
   console.log('Cancle Bid methode called')
 
   var params = {
-      user_id: LoginData.user_id,
+      user_id: userData[0].user_id,
       move_id: move_id,
       bid_id: bid_id,
       reason: 'reason'

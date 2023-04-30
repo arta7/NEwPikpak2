@@ -61,13 +61,23 @@ import realm from './UI/Common/realm'
 import ProviderMovesControl from './UI/Provider/ProviderMovesControl'
 
 
-import UserContext from './UI/Context/UserContext';
+import BlogContext from './BlogContext';
+
+import {updateStates} from './Redux/Functions'
+
+
+
+
+
+// import UserContext from './UI/Context/UserContext';
 
 export default function App ()  {
   // const value = useContext(Redux);
   // const [context, setContext] = useContext(Redux);
   const [NoticCount, setNoticCount] = useState('0');
   const [ctrl, setctrl] = useState(0);
+
+  const { userData, setUserData } = React.useContext(BlogContext);
 
   // const [userData, setUserData] = useState([
   //   {
@@ -99,13 +109,13 @@ export default function App ()  {
      }
      axios.get(APIMaster.URL + 
       APIMaster.NotificationsSetting.GetPushNotifications +
-      LoginData.user_id
+      userData[0].user_id
         )
       .then((response)=> {
         if(response.data.status == 1)
         {
         // value.Counter.setCount(response.data.badge)
-        console.log('response.data.badge', LoginData.user_id,response.data.badge)
+        console.log('response.data.badge', userData[0].user_id,response.data.badge)
         
         }
         // setctrl(true)
@@ -123,7 +133,9 @@ export default function App ()  {
          console.log('UserId',UserIds)
         if(UserIds != null && UserIds != '')
         {
-          LoginData.user_id = UserIds
+          // userData[0].user_id = UserIds
+
+          updateStates(userData,setUserData,UserIds)
         }
        
       }
@@ -137,13 +149,13 @@ export default function App ()  {
          }
          axios.get(APIMaster.URL + 
           APIMaster.NotificationsSetting.GetPushNotifications +
-          LoginData.user_id
+          userData[0].user_id
             )
           .then((response)=> {
             if(response.data.status == 1)
             {
               // value.Counter.setCount(response.data.badge)
-            console.log('response.data.badge', LoginData.user_id,response.data.badge)
+            console.log('response.data.badge', userData[0].user_id,response.data.badge)
             
             }
     
@@ -596,7 +608,7 @@ ProviderMovesControl:{screen:ProviderMovesControl} ,
     headerMode: 'none',
     headerVisible: 'false',
     // initialRouteName: 'ChangePincode'
-    initialRouteName: 'Splash'
+    initialRouteName: 'Login'
   }
  
  )

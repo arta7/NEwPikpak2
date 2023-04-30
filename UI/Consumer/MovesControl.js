@@ -21,9 +21,14 @@ import { LoginData } from '../../Redux/LoginData';
 import { APIMaster } from '../../API/APIMaster';
 import axios from 'axios';
 
+import BlogContext from './../../BlogContext';
+import {updateStates} from './../../Redux/Functions'
+
 export default  MovesControl=(props)=>{
 
     const [Badge, setBadge] = useState('0');
+
+    const { userData, setUserData } = React.useContext(BlogContext);
 
     useEffect(()=>{
       GetNoticCount()
@@ -48,7 +53,7 @@ export default  MovesControl=(props)=>{
        }
        axios.get(APIMaster.URL + 
         APIMaster.NotificationsSetting.GetPushNotifications +
-        LoginData.user_id
+        userData[0].user_id
           )
         .then((response)=> {
           setBadge(response.data.badge == undefined ?'0':response.data.badge.toString())

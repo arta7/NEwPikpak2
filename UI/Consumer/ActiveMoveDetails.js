@@ -241,7 +241,7 @@ let  _mapReady = () => {
   console.log("map ready");
   if(MoveLocationsData.pickup_description == '' && MoveLocationsData.delivery_description == '')
   {
-    animateMap(LocationData.current_latitude, LocationData.current_longitude)
+    animateMap(userData[0].current_latitude, userData[0].current_longitude)
   }
   else if(MoveLocationsData.pickup_description != '' && MoveLocationsData.delivery_description == '')
   {
@@ -357,7 +357,7 @@ useEffect(()=>{
  const animateMap = (lat, lng) => {
    if(mapView.current != null)
    {
-     if(LocationData.current_latitude != 0)
+     if(userData[0].current_latitude != 0)
      {
    mapView.current.animateToRegion({ 
        
@@ -593,8 +593,8 @@ let PaymentMethodeSelection=(Id)=>
       <MapView  style={{ ...StyleSheet.absoluteFillObject }}
           ref = {mapView}
           initialRegion={{
-            longitude: LocationData.current_longitude,
-            latitude: LocationData.current_latitude,
+            longitude: userData[0].current_longitude,
+            latitude: userData[0].current_latitude,
             latitudeDelta: 30,
             longitudeDelta: 0.0421}}
           showsUserLocation = {true}

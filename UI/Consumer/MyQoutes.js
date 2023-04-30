@@ -29,6 +29,10 @@ import Toast from 'react-native-simple-toast';
 import { CurrentMove, EditMoveData, MoveData } from '../../Redux/MoveData';
 import Loading_Data from '../../Components/LoadingData';
 
+
+import BlogContext from './../../BlogContext';
+import {updateStates} from './../../Redux/Functions'
+
 let SelectedMoveId = ''
 
 const MyQoutes = (props) => {
@@ -36,6 +40,9 @@ const MyQoutes = (props) => {
   const [Loader_Visible, setLoader_Visible] = useState(false)
 
   const [DeleteConfirm_Visible, setDeleteConfirm_Visible] = useState(false) 
+
+  const { userData, setUserData } = React.useContext(BlogContext);
+
 
   const [moveList, setMoveList] = useState([])
 
@@ -63,7 +70,7 @@ const MyQoutes = (props) => {
       }
      }
     axios.get(APIMaster.URL +
-      APIMaster.Move.GetMyQoutesList + LoginData.user_id + '/open', axiosConfig)
+      APIMaster.Move.GetMyQoutesList + userData[0].user_id + '/open', axiosConfig)
     .then((response)=> {
       console.log(response)
       if(response.data.status == 1)
@@ -276,8 +283,8 @@ const MyQoutes = (props) => {
                     MoveLocationsData.delivery_latitude = ''
                     MoveLocationsData.delivery_longitude = ''
 
-                    DefaultLocationData.default_latitude = LocationData.current_latitude
-                    DefaultLocationData.default_longitude = LocationData.current_longitude
+                    DefaultLocationData.default_latitude = userData[0].current_latitude
+                    DefaultLocationData.default_longitude = userData[0].current_longitude
 
                     props.navigation.push('CreateMove_Location', {move_id: ''})}}/>
 
@@ -312,7 +319,7 @@ const MyQoutes = (props) => {
               <BidInfo MoveTypeTitle = {item.move_type.name} MoveDateTime = {item.date_time_of_pickup} BidsCount = {item.total_bids}
               Function = {()=>{
                 console.log('test')
-                LoginData.CurrentPage = 1;
+                userData[0].CurrentPage = 1;
                 CurrentMove.move_id = item._id
                 CurrentMove.pickup_latitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[0])
                 CurrentMove.pickup_longitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[1])

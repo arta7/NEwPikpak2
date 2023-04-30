@@ -27,6 +27,10 @@ import { MoveData,
 } from '../../Redux/MoveData';
 
 
+import BlogContext from './../../BlogContext';
+import {updateStates} from './../../Redux/Functions'
+
+
 const QoutesDetails = (props) => {
 
   const [Loader_Visible, setLoader_Visible] = useState(false)
@@ -34,6 +38,8 @@ const QoutesDetails = (props) => {
   const CurrentMoveId = CurrentMove.move_id
 
   const [coords, setcoords] = useState([])
+
+  const { userData, setUserData } = React.useContext(BlogContext);
 
   const [BidsCount, SetBidsCount] = useState('')
   const [MoveTypeTitle, SetMoveTypeTitle] = useState('')
@@ -50,7 +56,7 @@ const QoutesDetails = (props) => {
   const animateMap = (lat, lng) => {
     if(mapView.current != null)
     {
-      if(LocationData.current_latitude != 0)
+      if(userData[0].current_latitude != 0)
       {
     mapView.current.animateToRegion({ 
         
@@ -176,7 +182,7 @@ const QoutesDetails = (props) => {
  let  _mapReady = () => {
 
     if(CurrentMove.pickup_description == '' && CurrentMove.delivery_description == '') {
-      animateMap(LocationData.current_latitude, LocationData.current_longitude)
+      animateMap(userData[0].current_latitude, userData[0].current_longitude)
     }
     else if(CurrentMove.pickup_description != '' && CurrentMove.delivery_description == '') {
       animateMap(CurrentMove.pickup_latitude, CurrentMove.pickup_longitude)
@@ -320,8 +326,8 @@ const QoutesDetails = (props) => {
         <MapView  style={{ ...StyleSheet.absoluteFillObject }}
           ref = {mapView}
           initialRegion={{
-            longitude: LocationData.current_longitude,
-            latitude: LocationData.current_latitude,
+            longitude: userData[0].current_longitude,
+            latitude: userData[0].current_latitude,
             latitudeDelta: 30,
             longitudeDelta: 0.0421}}
           showsUserLocation = {true}

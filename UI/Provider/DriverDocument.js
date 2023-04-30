@@ -23,6 +23,12 @@ import { PDData} from '../../Redux/ProfessionalDetailsData';
 import { LoginData } from '../../Redux/LoginData'
 import AsyncStorage from '@react-native-community/async-storage';
 
+import BlogContext from './../../BlogContext';
+import {updateStates} from './../../Redux/Functions'
+
+
+
+
 const DriverDocument = (props) => {
 
 
@@ -56,6 +62,8 @@ const [Loader_Visible, setLoader_Visible] = useState(false)
 const [StateList, setStateList] = useState([]);
 const [CityList, setCityList] = useState([]);
 
+const { userData, setUserData } = React.useContext(BlogContext);
+
 
 let GetUserData = async()=> {
     
@@ -65,13 +73,15 @@ let GetUserData = async()=> {
   
   console.log('User Id: ',User_Id)
 
-  console.log('User Id is : ', LoginData.user_id)
+  console.log('User Id is : ', userData[0].user_id)
     if(User_Id != '' && User_Id != null)
     {
-      LoginData.user_id = User_Id.toString();
-      console.log('User Id is : ', LoginData.user_id)
-      LoginData.username = Username.toString()
-      LoginData.role = Role.toString()
+      // LoginData.user_id = User_Id.toString();
+      // console.log('User Id is : ', userData[0].user_id)
+      // LoginData.username = Username.toString()
+      // LoginData.role = Role.toString()
+
+      updateStates(userData,setUserData,User_Id.toString(),Username.toString(),null,null,null,null,null,Role.toString())
     }
  
 }
@@ -392,7 +402,7 @@ let LoadCityList=()=>{
 
 let DataValidation=()=>{
 
-  console.log(LoginData.user_id)
+  console.log(userData[0].user_id)
 
                     if(FirstAddress == '' && SecondAddress == '')
                             {
@@ -444,7 +454,7 @@ let DataValidation=()=>{
 
                                                 Toast.show('Data Validation Successful')
 
-                                                SetProfessionalDetail(LoginData.user_id,
+                                                SetProfessionalDetail(userData[0].user_id,
                                                                       PDData.organization_type,
                                                                       PDData.vehicle_id,
                                                                       PDData.make_id,
@@ -476,7 +486,7 @@ let DataValidation=()=>{
 useEffect(()=>{
   GetUserData()
   GetStateList()
-  console.log('=> ', LoginData.user_id)
+  console.log('=> ', userData[0].user_id)
   },[])
 
   return (

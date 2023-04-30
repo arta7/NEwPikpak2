@@ -20,12 +20,19 @@ import axios from 'axios';
 import { APIMaster } from '../../API/APIMaster';
 import AsyncStorage from '@react-native-community/async-storage';
 
+import BlogContext from './../../BlogContext';
+import {updateStates} from './../../Redux/Functions'
+
+
+
+
+
 const ProfessionalDetails = (props) => {
 
 
 
 
-
+  const { userData, setUserData } = React.useContext(BlogContext);
 // ******************************************************
 const [OrganizationType, setOrganizationType] = useState('Individual')
 const [VehiclePhoto, setVehiclePhoto] = useState('')
@@ -104,7 +111,7 @@ let GetStateList = async()=>{
 }
   let GetProfessionalDetails = async()=>{
     var params = {
-      user_id : LoginData.user_id
+      user_id : userData[0].user_id
     }
     var axiosConfig = {
       headers:{
@@ -113,7 +120,7 @@ let GetStateList = async()=>{
       }
      }
     axios.get(APIMaster.URL +
-      APIMaster.ProfessionalDetail.GetProfessionalDetail + LoginData.user_id, axiosConfig)
+      APIMaster.ProfessionalDetail.GetProfessionalDetail + userData[0].user_id, axiosConfig)
    .then((response)=> {
            
            console.log('Details: ', response)  

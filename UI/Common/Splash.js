@@ -12,7 +12,7 @@ import Toast from 'react-native-simple-toast';
 import { APIMaster } from '../../API/APIMaster';
 import axios from 'axios';
 import BlogContext from './../../BlogContext';
-import {updateStates} from './../../Redux/Functions'
+import {updateStates,updateLocationState} from './../../Redux/Functions'
 
 
 
@@ -69,13 +69,17 @@ const Splash = (props) => {
       Geolocation.getCurrentPosition(
         (position) => {
 
-          LocationData.current_latitude = position.coords.latitude;
+          // LocationData.current_latitude = position.coords.latitude;
 
-          LocationData.current_longitude = position.coords.longitude;
+          // LocationData.current_longitude = position.coords.longitude;
       
-          LocationData.current_accuracy = position.coords.accuracy;
+          // LocationData.current_accuracy = position.coords.accuracy;
 
-          console.log('Lat: ', LocationData.current_latitude, '  Long: ', LocationData.current_longitude);
+
+          updateLocationState(userData,setUserData,position.coords.latitude,position.coords.longitude,position.coords.accuracy)
+
+
+          console.log('Lat: ', userData[0].current_latitude, '  Long: ', userData[0].current_longitude);
       
         },
         (error) => {

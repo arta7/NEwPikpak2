@@ -21,6 +21,12 @@ import ImagePicker from 'react-native-image-picker';
 // import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
 
+
+import BlogContext from './../../BlogContext';
+
+import {updateStates} from './../../Redux/Functions'
+
+
 let selectedImageId = 0
 let selectedImageUri = ''
 let loc_history = []
@@ -33,6 +39,8 @@ const [NumOfHelper, SetNumOfHelper] = useState(0)
 const [Description, SetDescription] = useState('')
 const [SelectImageVisible, setSelectImageVisible] = useState(false)
 const [SelectHelperVisible, setSelectHelperVisible] = useState(false)
+
+const { userData, setUserData } = React.useContext(BlogContext);
 
 const [HelperState, setHelperState] = useState([false, false, false, false, false])
 const [HelperTitle, setHelperTitle] = useState(['Driver Only', 'Driver + One Helper', 'Driver + Two Helpers', 'Driver + Three Helpers', 'Driver + Four Helpers'])
@@ -287,7 +295,7 @@ let SetMoveData = async(_address_of_pickup,
   setLoader_Visible(true)
 
   var param =new FormData();
-  param.append('user_id',LoginData.user_id)
+  param.append('user_id',userData[0].user_id)
   param.append('address_of_pickup',_address_of_pickup)
   param.append('gps_of_pickup',_gps_of_pickup)
   param.append('address_of_delivery',_address_of_delivery)

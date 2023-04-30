@@ -21,7 +21,6 @@ import { LoginData } from '../../Redux/LoginData';
 
 
 import BlogContext from './../../BlogContext';
-
 import {updateStates} from './../../Redux/Functions'
 
 const ChangePassword = (props) => {

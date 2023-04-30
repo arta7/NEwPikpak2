@@ -29,6 +29,8 @@ import { MoveData, CurrentMove } from '../../Redux/MoveData';
 import { WebView } from 'react-native-webview';
 
 
+
+
 export default class  PaymentPage extends Component  {
   constructor(props) {
     super(props)
