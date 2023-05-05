@@ -30,7 +30,13 @@ const Messages = (props) => {
   const [MessageList, setMessageList] = useState([])
 
 
-  const { userData, setUserData } = React.useContext(BlogContext);
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
 
   
   const flatListRef = useRef(null)

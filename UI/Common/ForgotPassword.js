@@ -30,7 +30,13 @@ const ChangePassword = (props) => {
   const [Loader_Visible, setLoader_Visible] = useState(false)
 
 
-  const { userData, setUserData } = React.useContext(BlogContext);
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
 
   let BlurControls=()=>{
     _email.current.blur()

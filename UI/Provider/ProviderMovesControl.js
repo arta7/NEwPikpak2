@@ -13,9 +13,17 @@ import axios from 'axios';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import IconBadge from 'react-native-icon-badge';
 import ProviderMoves from './ProviderMoves';
+
+
+import BlogContext from './../../BlogContext';
+import {updateStates} from './../../Redux/Functions'
+
 let interval;
 
 export default class ProviderMovesControl extends Component {
+
+  static contextType = BlogContext; 
+
   state = {
     index: LoginData.CurrentPage,Badge:'0',
     routes: [
@@ -59,7 +67,7 @@ clearInterval(interval)
    }
    axios.get(APIMaster.URL + 
     APIMaster.NotificationsSetting.GetPushNotifications +
-    LoginData.user_id
+    this.contextType.currentData[0].user_id
       )
     .then((response)=> {
       this.setState({Badge:response.data.badge == undefined ?'0':response.data.badge.toString()})

@@ -24,7 +24,7 @@ import { LoginData } from '../../Redux/LoginData'
 import AsyncStorage from '@react-native-community/async-storage';
 
 import BlogContext from './../../BlogContext';
-import {updateStates} from './../../Redux/Functions'
+import {updatePDDataSatte, updateStates} from './../../Redux/Functions'
 
 
 
@@ -62,7 +62,13 @@ const [Loader_Visible, setLoader_Visible] = useState(false)
 const [StateList, setStateList] = useState([]);
 const [CityList, setCityList] = useState([]);
 
-const { userData, setUserData } = React.useContext(BlogContext);
+const { userData,setUserData,CurrentData,setCurrentData,
+  MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+  MoveData,setMoveData,
+  EditMoveData,setEditMoveData,
+  CurrentMove,setCurrentMove,
+  PDData,setPDData,
+  VDData,setVDData } = React.useContext(BlogContext);
 
 
 let GetUserData = async()=> {
@@ -442,41 +448,46 @@ let DataValidation=()=>{
                                               }
                                               else
                                               {
-                                                PDData.vehicle_photo = VehicleImage
-                                                PDData.vehicle_inspection_form = DrivingLicenseImage
-                                                PDData.vehicle_insurance = VehicleInsuranceImage
-                                                PDData.vehicle_registration = VehicleRegistrationImage
-                                                PDData.address_1 = FirstAddress
-                                                PDData.address_2 = SecondAddress
-                                                PDData.state = State
-                                                PDData.city = City
-                                                PDData.zip_code = ZipCode
+                                                updatePDDataSatte(PDData,setPDData,null,null,null,null
+                                                  ,null,null,null,null,null,FirstAddress,State,City,
+                                                  ZipCode,VehicleImage,DrivingLicenseImage,VehicleInsuranceImage
+                                                  ,VehicleRegistrationImage,null,null,null,null,null,SecondAddress)
+
+                                                // PDData.vehicle_photo = VehicleImage
+                                                // PDData.vehicle_inspection_form = DrivingLicenseImage
+                                                // PDData.vehicle_insurance = VehicleInsuranceImage
+                                                // PDData.vehicle_registration = VehicleRegistrationImage
+                                                // PDData.address_1 = FirstAddress
+                                                // PDData.address_2 = SecondAddress
+                                                // PDData.state = State
+                                                // PDData.city = City
+                                                // PDData.zip_code = ZipCode
 
                                                 Toast.show('Data Validation Successful')
 
                                                 SetProfessionalDetail(userData[0].user_id,
-                                                                      PDData.organization_type,
-                                                                      PDData.vehicle_id,
-                                                                      PDData.make_id,
-                                                                      PDData.model_id,
-                                                                      PDData._year,
-                                                                      PDData.color_id,
-                                                                      PDData.tow_hitch,
-                                                                      PDData.trailer,
-                                                                      PDData.lift_up_to,
-                                                                      PDData.address_1,
-                                                                      PDData.state,
-                                                                      PDData.city,
-                                                                      PDData.zip_code,
-                                                                      PDData.vehicle_photo,
-                                                                      PDData.vehicle_inspection_form,
-                                                                      PDData.vehicle_insurance,
-                                                                      PDData.vehicle_registration,
-                                                                      PDData.trailer_open,
-                                                                      PDData.equipment_id,
-                                                                      PDData.max_weight,
-                                                                      PDData.bed_length,
-                                                                      PDData.address_2
+                                                                      PDData[0].organization_type,
+                                                                      PDData[0].vehicle_id,
+                                                                      PDData[0].make_id,
+                                                                      PDData[0].model_id,
+                                                                      PDData[0]._year,
+                                                                      PDData[0].color_id,
+                                                                      PDData[0].tow_hitch,
+                                                                      PDData[0].trailer,
+                                                                      PDData[0].lift_up_to,
+                                                                      FirstAddress,
+                                                                      State,
+                                                                      City,
+                                                                      ZipCode,
+                                                                      VehicleImage,
+                                                                      DrivingLicenseImage,
+                                                                      VehicleInsuranceImage,
+                                                                      VehicleRegistrationImage,
+                                                                      PDData[0].trailer_open,
+                                                                      PDData[0].equipment_id,
+                                                                      PDData[0].max_weight,
+                                                                      PDData[0].bed_length,
+                                                                      SecondAddress
                                                                       )
                                                   
                                                   props.navigation.replace('Home')

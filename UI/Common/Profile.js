@@ -37,7 +37,13 @@ const Profile = (props) => {
   const [UserPicFN, setUserPicFN] = useState(null)
   const [file_uri, setfile_uri] = useState("./../../Image/person.png")
 
-  const { userData, setUserData } = React.useContext(BlogContext);
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
   // const [UPic, setUPic] = useState(require(filePath.toString()))
 
   const [Loader_Visible, setLoader_Visible] = useState(false)

@@ -29,7 +29,13 @@ const Workload = (props) => {
   const [WorkloadList, setWorkloadList] = useState([])
   const [Loader_Visible, setLoader_Visible] = useState(false)
 
-  const { userData, setUserData } = React.useContext(BlogContext);
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
 
 
   let icon_size = wp('6%')
@@ -125,15 +131,24 @@ const Workload = (props) => {
                             PickedState={item.status == 'picked' ? true : false}
                             showDetails={true}
                             MainFunction = {()=>{props.navigation.navigate('DriverMovesControl', {move_id: item._id})
-                                                CurrentMove.move_id = item._id
-                                                CurrentMove.pickup_latitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[0])
-                                                CurrentMove.pickup_longitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[1])
-                                                CurrentMove.pickup_description = item.address_of_pickup
-                                                CurrentMove.delivery_latitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[0])
-                                                CurrentMove.delivery_longitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[1])
-                                                CurrentMove.delivery_description = item.address_of_delivery
 
-                                                CurrentMove.provider_move_details_header == 'off'}}/>
+                                                // CurrentMove.move_id = item._id
+                                                // CurrentMove.pickup_latitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[0])
+                                                // CurrentMove.pickup_longitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[1])
+                                                // CurrentMove.pickup_description = item.address_of_pickup
+                                                // CurrentMove.delivery_latitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[0])
+                                                // CurrentMove.delivery_longitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[1])
+                                                // CurrentMove.delivery_description = item.address_of_delivery
+                                                // CurrentMove.provider_move_details_header == 'off'
+                                                updateCurrentMoveState(CurrentMove,setCurrentMove,item._id.toString().trim(),'off',item.address_of_delivery.toString()
+                                                ,parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[0])
+                                                ,parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[1]),
+                                                item.address_of_pickup.toString(),parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[0]),
+                                                parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[1])
+                                                )
+                                                
+                                                
+                                                }}/>
           
           </View>
 

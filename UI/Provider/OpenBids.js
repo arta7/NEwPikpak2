@@ -35,7 +35,13 @@ const OpenBids = (props) => {
 const [BidsList, setBidsList] = useState([])
 
 
-const { userData, setUserData } = React.useContext(BlogContext);
+const { userData,setUserData,CurrentData,setCurrentData,
+  MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+  MoveData,setMoveData,
+  EditMoveData,setEditMoveData,
+  CurrentMove,setCurrentMove,
+  PDData,setPDData,
+  VDData,setVDData } = React.useContext(BlogContext);
 
  
 let icon_size = wp('6%')

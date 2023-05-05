@@ -16,7 +16,7 @@ import Toast from 'react-native-simple-toast';
 
 import BlogContext from './../../BlogContext';
 
-import {updateStates} from './../../Redux/Functions'
+import {updateStates,updateLocationState} from './../../Redux/Functions'
 
 
 const ChangePassword = (props) => {
@@ -31,7 +31,13 @@ const ChangePassword = (props) => {
   const [confirmPassword, setConfirmPassword] = useState('')
 
 
-  const { userData, setUserData } = React.useContext(BlogContext);
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
 
   let BlurControls=()=>{
     _oldPassword.current.blur()

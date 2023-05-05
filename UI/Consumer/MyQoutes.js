@@ -31,7 +31,7 @@ import Loading_Data from '../../Components/LoadingData';
 
 
 import BlogContext from './../../BlogContext';
-import {updateStates} from './../../Redux/Functions'
+import {updateStates,updateMoveLocationState, updateDefaultLocationState, updateMoveState, updateEditMoveDataState, updateCurrentMoveState} from './../../Redux/Functions'
 
 let SelectedMoveId = ''
 
@@ -41,7 +41,13 @@ const MyQoutes = (props) => {
 
   const [DeleteConfirm_Visible, setDeleteConfirm_Visible] = useState(false) 
 
-  const { userData, setUserData } = React.useContext(BlogContext);
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
 
 
   const [moveList, setMoveList] = useState([])
@@ -166,25 +172,36 @@ const MyQoutes = (props) => {
       if(response.status == 200)
         {
           
-          EditMoveData.address_of_pickup = response.data.move.address_of_pickup
-          EditMoveData.gps_of_pickup = response.data.move.gps_of_pickup
+          // EditMoveData.address_of_pickup = response.data.move.address_of_pickup
+          // EditMoveData.gps_of_pickup = response.data.move.gps_of_pickup
 
-          EditMoveData.address_of_delivery = response.data.move.address_of_delivery
-          EditMoveData.gps_of_delivery = response.data.move.gps_of_delivery
+          // EditMoveData.address_of_delivery = response.data.move.address_of_delivery
+          // EditMoveData.gps_of_delivery = response.data.move.gps_of_delivery
 
-          EditMoveData.move_type_id = response.data.move.move_type_id
+          // EditMoveData.move_type_id = response.data.move.move_type_id
 
-          EditMoveData.date_of_pickup = response.data.move.date_of_pickup
+          // EditMoveData.date_of_pickup = response.data.move.date_of_pickup
 
-          console.log('EditMoveData.date_of_pickup',EditMoveData.date_of_pickup)
-          EditMoveData.time_of_pickup = response.data.move.time_of_pickup
+          // console.log('EditMoveData.date_of_pickup',EditMoveData.date_of_pickup)
+          // EditMoveData.time_of_pickup = response.data.move.time_of_pickup
 
-          EditMoveData.move_images = response.data.move.move_files
-          console.log('Move Images: ', EditMoveData.move_images)
+          // EditMoveData.move_images = response.data.move.move_files
+          // console.log('Move Images: ', EditMoveData.move_images)
 
-          EditMoveData.weight = response.data.move.weight
-          EditMoveData.no_of_helpers = response.data.move.no_of_helpers
-          EditMoveData.description = response.data.move.description
+          // EditMoveData.weight = response.data.move.weight
+          // EditMoveData.no_of_helpers = response.data.move.no_of_helpers
+          // EditMoveData.description = response.data.move.description
+
+            
+          updateEditMoveDataState(EditMoveData,setEditMoveData,response.data.move.address_of_pickup
+            ,response.data.move.gps_of_pickup,response.data.move.address_of_delivery,response.data.move.gps_of_delivery
+            ,response.data.move.move_type_id.toString(),response.data.move.date_of_pickup,response.data.move.time_of_pickup,response.data.move.move_files,
+            response.data.move.weight,response.data.move.no_of_helpers,response.data.move.description )
+
+
+
+
+
           
           props.navigation.navigate('CreateMove_Location', {move_id: _move_id, 
             pickup_coords: response.data.move.gps_of_pickup.toString().replace('[', '').replace(']', '').split(','),
@@ -202,44 +219,49 @@ const MyQoutes = (props) => {
   }
 
   let ResetEditMoveData=()=>{
-      EditMoveData.address_of_pickup = '',
-      EditMoveData.gps_of_pickup = '',
-      EditMoveData.address_of_delivery = '',
-      EditMoveData.gps_of_delivery = '',
-      EditMoveData.move_type_id = '',
-      EditMoveData.date_of_pickup = '',
-      EditMoveData.time_of_pickup = '',
-      EditMoveData.move_images = [],
-      EditMoveData.weight = 0,
-      EditMoveData.no_of_helpers = 0,
-      EditMoveData.description = '',
-      EditMoveData.consumer_vehicle_id = '',
-      EditMoveData.move_bids = []
+      // EditMoveData.address_of_pickup = '',
+      // EditMoveData.gps_of_pickup = '',
+      // EditMoveData.address_of_delivery = '',
+      // EditMoveData.gps_of_delivery = '',
+      // EditMoveData.move_type_id = '',
+      // EditMoveData.date_of_pickup = '',
+      // EditMoveData.time_of_pickup = '',
+      // EditMoveData.move_images = [],
+      // EditMoveData.weight = 0,
+      // EditMoveData.no_of_helpers = 0,
+      // EditMoveData.description = '',
+      // EditMoveData.consumer_vehicle_id = '',
+      // EditMoveData.move_bids = []
+      
+      updateEditMoveDataState(EditMoveData,setEditMoveData,'','','','','','','',[],0,0,'','',[])
 
   }
 
   let ResetMoveData=()=>{
-    MoveData.address_of_pickup = ''
-    MoveData.gps_of_pickup = ''
-    MoveData.address_of_delivery = ''
-    MoveData.move_type_id = ''
-    MoveData.pickup_unit_number = ''
-    MoveData.pickup_stairs = ''
-    MoveData.pickup_elevator_building = ''
-    MoveData.pickup_parking_info = ''
-    MoveData.delivery_unit_Number = ''
-    MoveData.delivery_stairs = ''
-    MoveData.delivery_elevator_building = ''
-    MoveData.delivery_parking_info = ''
-    MoveData.date_of_pickup = ''
-    MoveData.time_of_pickup = ''
-    MoveData.move_images = []
-    MoveData.weight = ''
-    MoveData.no_of_helpers = ''
-    MoveData.description = ''
-    MoveData.consumer_vehicle_id = ''
-    MoveData.move_bids = []
-    MoveData.delivery_place_id = ''
+    // MoveData.address_of_pickup = ''
+    // MoveData.gps_of_pickup = ''
+    // MoveData.address_of_delivery = ''
+    // MoveData.move_type_id = ''
+    // MoveData.pickup_unit_number = ''
+    // MoveData.pickup_stairs = ''
+    // MoveData.pickup_elevator_building = ''
+    // MoveData.pickup_parking_info = ''
+    // MoveData.delivery_unit_Number = ''
+    // MoveData.delivery_stairs = ''
+    // MoveData.delivery_elevator_building = ''
+    // MoveData.delivery_parking_info = ''
+    // MoveData.date_of_pickup = ''
+    // MoveData.time_of_pickup = ''
+    // MoveData.move_images = []
+    // MoveData.weight = ''
+    // MoveData.no_of_helpers = ''
+    // MoveData.description = ''
+    // MoveData.consumer_vehicle_id = ''
+    // MoveData.move_bids = []
+    // MoveData.delivery_place_id = ''
+
+
+    updateMoveState(MoveData,setMoveData,'','','','','','','','','','','','','','','',[],'','','','',[],'')
 
 }
 
@@ -275,17 +297,23 @@ const MyQoutes = (props) => {
                   Function = {()=>{
                     ResetEditMoveData()
                     ResetMoveData()
-                    MoveLocationsData.pickup_description = ''
-                    MoveLocationsData.pickup_latitude = ''
-                    MoveLocationsData.pickup_longitude = ''
+                    // MoveLocationsData.pickup_description = ''
+                    // MoveLocationsData.pickup_latitude = ''
+                    // MoveLocationsData.pickup_longitude = ''
 
-                    MoveLocationsData.delivery_description = ''
-                    MoveLocationsData.delivery_latitude = ''
-                    MoveLocationsData.delivery_longitude = ''
+                    // MoveLocationsData.delivery_description = ''
+                    // MoveLocationsData.delivery_latitude = ''
+                    // MoveLocationsData.delivery_longitude = ''
 
-                    DefaultLocationData.default_latitude = userData[0].current_latitude
-                    DefaultLocationData.default_longitude = userData[0].current_longitude
+                    updateMoveLocationState(MoveLocationsData,setMoveLocationsData,'',0,0,'',0,0,0)
 
+                    // DefaultLocationData.default_latitude = CurrentData[0].current_latitude
+                    // DefaultLocationData.default_longitude = CurrentData[0].current_longitude
+
+
+                    updateDefaultLocationState(DefaultLocationData,setDefaultLocationData, CurrentData[0].current_latitude ,CurrentData[0].current_longitude)
+
+                    
                     props.navigation.push('CreateMove_Location', {move_id: ''})}}/>
 
         </View>
@@ -300,13 +328,22 @@ const MyQoutes = (props) => {
               <MoveThumbnail  ImageSrc = {item.move_files}
                showDetails={true}
                               ShowButtons = {true} ShowEditButtons = {item.total_bids == '0 Bid'} 
-                              MainFunction = {()=>{CurrentMove.move_id = item._id
-                                                  CurrentMove.pickup_latitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[0])
-                                                  CurrentMove.pickup_longitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[1])
-                                                  CurrentMove.pickup_description = item.address_of_pickup
-                                                  CurrentMove.delivery_latitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[0])
-                                                  CurrentMove.delivery_longitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[1])
-                                                  CurrentMove.delivery_description = item.address_of_delivery
+                              MainFunction = {()=>{
+                                // CurrentMove.move_id = item._id
+                                //                   CurrentMove.pickup_latitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[0])
+                                //                   CurrentMove.pickup_longitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[1])
+                                //                   CurrentMove.pickup_description = item.address_of_pickup
+                                //                   CurrentMove.delivery_latitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[0])
+                                //                   CurrentMove.delivery_longitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[1])
+                                //                   CurrentMove.delivery_description = item.address_of_delivery
+
+                                                  updateCurrentMoveState(CurrentMove,setCurrentMove,item._id.toString().trim(),'on',item.address_of_delivery.toString()
+                                                  ,parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[0])
+                                                  ,parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[1]),
+                                                  item.address_of_pickup.toString(),parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[0]),
+                                                  parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[1])
+                                                  )
+
                                                   props.navigation.navigate('QoutesControl')}}
                               DeleteFunction = {()=>{ConfirmDeleteItem(item._id)}}
                               EditFunction = {()=>{ GetMove(item._id) }}/>
@@ -320,13 +357,19 @@ const MyQoutes = (props) => {
               Function = {()=>{
                 console.log('test')
                 userData[0].CurrentPage = 1;
-                CurrentMove.move_id = item._id
-                CurrentMove.pickup_latitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[0])
-                CurrentMove.pickup_longitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[1])
-                CurrentMove.pickup_description = item.address_of_pickup
-                CurrentMove.delivery_latitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[0])
-                CurrentMove.delivery_longitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[1])
-                CurrentMove.delivery_description = item.address_of_delivery
+                updateCurrentMoveState(CurrentMove,setCurrentMove,item._id.toString().trim(),'on',item.address_of_delivery.toString()
+                ,parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[0])
+                ,parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[1]),
+                item.address_of_pickup.toString(),parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[0]),
+                parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[1])
+                )
+                // CurrentMove.move_id = item._id
+                // CurrentMove.pickup_latitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[0])
+                // CurrentMove.pickup_longitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[1])
+                // CurrentMove.pickup_description = item.address_of_pickup
+                // CurrentMove.delivery_latitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[0])
+                // CurrentMove.delivery_longitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[1])
+                // CurrentMove.delivery_description = item.address_of_delivery
                 
 
                 props.navigation.navigate('QoutesControl')}}

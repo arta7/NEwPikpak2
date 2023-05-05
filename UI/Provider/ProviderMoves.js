@@ -32,7 +32,13 @@ const ProviderMoves = (props) => {
   const [Loader_Visible, setLoader_Visible] = useState(false)
 
 
-  const { userData, setUserData } = React.useContext(BlogContext);
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
 
 // const [BidsCount, SetBidsCount] = useState(0)
 // const [MoveTypeTitle, SetMoveTypeTitle] = useState('Business Deliveries')
@@ -69,9 +75,9 @@ let GetAvailableMoveList = async()=>{
    }
    axios.get(APIMaster.URL + 
     APIMaster.Move.GetAvailableMoveList + userData[0].user_id + '?latitude='+
-     userData[0].current_latitude
+     CurrentData[0].current_latitude
     +'&longitude='+
-     userData[0].current_longitude
+     CurrentData[0].current_longitude
       , axiosConfig)
     .then((response)=> {
   console.log('Get Place Lat & long')
@@ -125,15 +131,26 @@ style = {{marginTop: hp('1%')}}
                            DeliveryAddress = {item.address_of_delivery}
                            ButtonTitle = {'Detail'} 
                            Function = {()=>{props.navigation.navigate('ProviderMoveDetails')
-                                            CurrentMove.move_id = item._id
-                                            CurrentMove.pickup_latitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[0])
-                                            CurrentMove.pickup_longitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[1])
-                                            CurrentMove.pickup_description = item.address_of_pickup
-                                            CurrentMove.delivery_latitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[0])
-                                            CurrentMove.delivery_longitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[1])
-                                            CurrentMove.delivery_description = item.address_of_delivery
-                                            CurrentMove.provider_move_details_header = 'on' 
-                                            console.log('test gps 2 ',CurrentMove)
+
+                                            // CurrentMove.move_id = item._id
+                                            // CurrentMove.pickup_latitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[0])
+                                            // CurrentMove.pickup_longitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[1])
+                                            // CurrentMove.pickup_description = item.address_of_pickup
+                                            // CurrentMove.delivery_latitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[0])
+                                            // CurrentMove.delivery_longitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[1])
+                                            // CurrentMove.delivery_description = item.address_of_delivery
+                                            // CurrentMove.provider_move_details_header = 'on' 
+                                            // console.log('test gps 2 ',CurrentMove)
+                                            updateCurrentMoveState(CurrentMove,setCurrentMove,item._id.toString().trim(),'on',item.address_of_delivery.toString()
+                                            ,parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[0])
+                                            ,parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[1]),
+                                            item.address_of_pickup.toString(),parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[0]),
+                                            parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[1])
+                                            )
+
+
+
+
                                             }} />
                            {/* Function = {()=>{props.navigation.navigate('BidNow', {move_id: item._id, user_id: LoginData.user_id, 
                                                                                 move_img: require("./../../Image/ImagePlaceholder.png"), 

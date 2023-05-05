@@ -30,7 +30,13 @@ import {updateStates} from './../../Redux/Functions'
 const BidNow = (props) => {
 
 const [BidsCount, SetBidsCount] = useState(0)
-const { userData, setUserData } = React.useContext(BlogContext);
+const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
 
 
 const MoveId = props.navigation.state.params.move_id

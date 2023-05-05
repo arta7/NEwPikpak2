@@ -11,7 +11,24 @@ import {Drawer} from 'native-base';
 import Sidebar from '../Common/Sidebar';
 
 
+import BlogContext from './../../BlogContext';
+import {updateStates} from './../../Redux/Functions'
+
+
 const PaymentDetails = (props) => {
+
+
+
+  
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
+
+
 
   const [MovesList, setMoveList] = useState([
     // {title: 'Payment for Move #1', date: '07/01/2021 02:49 PM from Card #1'},

@@ -22,6 +22,7 @@ import Modal from 'react-native-modal';
 import Loading_Data from '../../Components/LoadingData';
 import Toast from 'react-native-simple-toast';
 import BlogContext from './../../BlogContext';
+// import {LatContext} from './../../BlogContext';
 
 import {updateStates,updateLocationState} from './../../Redux/Functions'
 
@@ -37,7 +38,15 @@ const Login = (props)=> {
   const [Loader_Visible, setLoader_Visible] = useState(false)
   const[IsSecures,setIsSecure] = useState(true)
 
-  const { userData, setUserData } = React.useContext(BlogContext);
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
+  
+  // const {CurrentData,setCurrentData } = React.useContext(LatContext);
 
 
  
@@ -71,12 +80,10 @@ const Login = (props)=> {
   // }
 
   let updaetDataes=async()=>{
-    updateLocationState(userData,setUserData,null,2)
 
-    
        updateStates(userData,setUserData,1)
 
-     
+      updateLocationState(CurrentData,setCurrentData,null,2)
     // UserLogin(username, password, 'default')
     //  var y = await updateLocationState(userData,setUserData,1)
 
@@ -152,7 +159,12 @@ const Login = (props)=> {
     })
   }
 
-  let changestate=async()=>{
+
+  useEffect(() => {
+   
+  }, [])
+
+  let changestate=async()=>{LoginData.username 
     var x = await setLoader_Visible(false)
     var x1 = await  AsyncStorage.setItem("user_id",userData[0].user_id)
     var y = await  AsyncStorage.setItem("username",userData[0].username)
@@ -172,7 +184,7 @@ const Login = (props)=> {
 
    }
   
-    // updateStates(userData,setUserData,null,_username)
+    //  updateStates(userData,setUserData,null,_username)
    setLoader_Visible(true)
     
     var params = {
@@ -197,19 +209,19 @@ const Login = (props)=> {
 
         if(response.data.data) {
 
-          AsyncStorage.setItem("user_id",userData[0].user_id)
+          AsyncStorage.setItem("user_id",response.data.data._id)
            AsyncStorage.setItem("username",_username)
-           AsyncStorage.setItem("role",userData[0].role)
+           AsyncStorage.setItem("role",response.data.data.role)
         }
        
         setLoader_Visible(false)
         Toast.show(response.data.message)
-        CheckUserActive(userData[0].username,null,null)
+        CheckUserActive(_username,null,null)
       }
 
       else if(response.data.message != 'Invalid username or password' && response.data.status == 0 )
       {
-        CheckUserActive(userData[0].username,null,null)
+        CheckUserActive(_username,null,null)
       }
       // else
       // {
@@ -230,6 +242,8 @@ const Login = (props)=> {
 
 
   let CheckUserActive=(_user_id,_activeCode,_sendagain)=>{
+
+    console.log('_user_id for activation',_user_id)
     var axiosConfig = {
 
       headers: {
@@ -262,7 +276,7 @@ const Login = (props)=> {
 
     axios.post(APIMaster.URL + APIMaster.User.activation,params,axiosConfig)
     .then((response)=> {
-
+      console.log('check _user_id for activation',_user_id)
       // Toast.show(response.data.status)
       if(response.data.status == 1)
       {
@@ -386,10 +400,10 @@ const Login = (props)=> {
                 t_TextColor = {'white'} HasIcon = {false}
                 Function = {()=>{
                   // updateStates(userData,setUserData,1)
-                // UserLogin(username, password, 'default')
+                 UserLogin(username, password, 'default')
               //  updateLocationState(userData,setUserData,1)
 
-              updaetDataes()
+             // updaetDataes()
                   }}/>
 
       </View>
@@ -401,7 +415,12 @@ const Login = (props)=> {
                 t_FontSize = {wp('3.5%')} t_FontWeight = {'bold'} 
                 t_ButtonTitle = {'Forgat Password?'} t_Elevation = {3} 
                 t_TextColor = {'#FC9824'} HasIcon = {false}
-                Function = {()=>{props.navigation.push('ForgotPassword')}}/>
+                Function = {()=>{
+                 
+                  props.navigation.push('ForgotPassword')
+                }
+                }
+                  />
 
       </View>
 

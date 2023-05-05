@@ -10,9 +10,23 @@ import Qoutes from './../Components/Qoutes';
 import Button from './../Components/Button';
 import Headers from './../Components/Headers'
 
-
+import BlogContext from './../../BlogContext';
+import {updateStates} from './../../Redux/Functions'
 
 const QoutesList = (props) => {
+
+
+
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
+
+
+
 
   const [CardsList, setCardsList] = useState([
     // {title: 'Qoute #1', date: '07/01/2021 02:49 PM'},

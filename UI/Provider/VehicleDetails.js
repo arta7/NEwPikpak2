@@ -16,10 +16,19 @@ import DriverDocument from '../../Components/DriverDocument';
 import AsyncStorage from '@react-native-community/async-storage';
 
 
+import BlogContext from './../../BlogContext';
+import {updateStates} from './../../Redux/Functions'
+
 const ProfessionalDetails = (props) => {
 
 
-
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
 
 
 // ******************************************************
@@ -45,7 +54,7 @@ let GetVehicleDetails=()=>{
 
        for(let i=0; i < ourData.length; i++)
        {
-        if(ourData[0]._id == VDData.vehicle_id)
+        if(ourData[0]._id == VDData[0].vehicle_id)
           { 
             setVehicle(ourData[0].vehicle.name)
             setYear(ourData[0].year)
@@ -71,7 +80,7 @@ let GetVehicleDetails=()=>{
 
 useEffect(()=>{
   
-  console.log(VDData.vehicle_id)
+  console.log(VDData[0].vehicle_id)
   GetVehicleDetails()
 
   },[])

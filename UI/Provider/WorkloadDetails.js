@@ -28,10 +28,8 @@ import Polyline from '@mapbox/polyline';
 import { GoogleMaps } from '../../Redux/GoogleMapsData';
 import { MoveData, CurrentMove } from '../../Redux/MoveData';
 
-
 import BlogContext from './../../BlogContext';
-import {updateStates} from './../../Redux/Functions'
-
+import {updateMoveState, updateStates} from './../../Redux/Functions'
 
 
 let PickupLatitude
@@ -43,7 +41,16 @@ let DeliveryLongitude
 
 const ProviderMoveDetails = (props) => {
 
-  const { userData, setUserData } = React.useContext(BlogContext);
+
+  
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
+
 
   const [Loader_Visible, setLoader_Visible] = useState(false)
 
@@ -125,7 +132,8 @@ let GetMove = (_move_id)=>{
                 getDirections(response.data.move.gps_of_pickup[0] + " , " + response.data.move.gps_of_pickup[1] ,
                               response.data.move.gps_of_delivery[0] + " , " + response.data.move.gps_of_delivery[1])
                 
-                MoveData.move_bids = response.data.bids
+                // MoveData.move_bids = response.data.bids
+                updateMoveState(MoveData,setMoveData,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,response.data.bids)
 
                 setUserPic(response.data.move.user_pic)
 
@@ -167,7 +175,7 @@ let ChangeTransaction=(action)=>{
     }
    }
    var params = {
-     id:CurrentMove.move_id,
+     id:CurrentMove[0].move_id,
      action:action
    }
    console.log('params',params)
@@ -188,10 +196,10 @@ let ChangeTransaction=(action)=>{
 }
 
 let FitToCoordinates=()=> {
-  console.log('latitude: ',CurrentMove.pickup_latitude , 'longitude: ',CurrentMove.pickup_longitude)
+  console.log('latitude: ',CurrentMove[0].pickup_latitude , 'longitude: ',CurrentMove[0].pickup_longitude)
   mapView.current.fitToCoordinates([
-      { latitude: CurrentMove.pickup_latitude, longitude: CurrentMove.pickup_longitude }, 
-      { latitude: CurrentMove.delivery_latitude, longitude: CurrentMove.delivery_longitude }
+      { latitude: CurrentMove[0].pickup_latitude, longitude: CurrentMove[0].pickup_longitude }, 
+      { latitude: CurrentMove[0].delivery_latitude, longitude: CurrentMove[0].delivery_longitude }
     ], {
     edgePadding: {
       bottom: 200,
@@ -240,7 +248,7 @@ let getDirections = async(startLoc, destinationLoc)=> {
 const animateMap = (lat, lng) => {
   if(mapView.current != null)
   {
-    if(userData[0].current_latitude != 0)
+    if(CurrentData[0].current_latitude != 0)
     {
   mapView.current.animateToRegion({ 
       
@@ -256,15 +264,15 @@ const animateMap = (lat, lng) => {
 
 let  _mapReady = () => {
 
-  if(CurrentMove.pickup_description == '' && CurrentMove.delivery_description == '') {
-    animateMap(userData[0].current_latitude, userData[0].current_longitude)
+  if(CurrentMove[0].pickup_description == '' && CurrentMove[0].delivery_description == '') {
+    animateMap(CurrentData[0].current_latitude, CurrentData[0].current_longitude)
   }
-  else if(CurrentMove.pickup_description != '' && CurrentMove.delivery_description == '') {
-    animateMap(CurrentMove.pickup_latitude, CurrentMove.pickup_longitude)
+  else if(CurrentMove[0].pickup_description != '' && CurrentMove[0].delivery_description == '') {
+    animateMap(CurrentMove[0].pickup_latitude, CurrentMove[0].pickup_longitude)
   }
-  else if((CurrentMove.pickup_description != '' && CurrentMove.delivery_description == '') || 
-          (CurrentMove.pickup_description == '' && CurrentMove.delivery_description != '')) {
-    animateMap(CurrentMove.delivery_latitude, CurrentMove.delivery_longitude)
+  else if((CurrentMove[0].pickup_description != '' && CurrentMove[0].delivery_description == '') || 
+          (CurrentMove[0].pickup_description == '' && CurrentMove[0].delivery_description != '')) {
+    animateMap(CurrentMove[0].delivery_latitude, CurrentMove[0].delivery_longitude)
   }
 }
 
@@ -310,7 +318,7 @@ let BidSelection=(Id)=>
 
 
   useEffect(()=>{
-    GetMove(CurrentMove.move_id)
+    GetMove(CurrentMove[0].move_id)
   }, [])
 
   return (
@@ -501,8 +509,8 @@ let BidSelection=(Id)=>
 <MapView  style={{ ...StyleSheet.absoluteFillObject }}
           ref = {mapView}
           initialRegion={{
-            longitude: userData[0].current_longitude,
-            latitude: userData[0].current_latitude,
+            longitude: CurrentData[0].current_longitude,
+            latitude: CurrentData[0].current_latitude,
             latitudeDelta: 30,
             longitudeDelta: 0.0421}}
           showsUserLocation = {true}
@@ -510,7 +518,7 @@ let BidSelection=(Id)=>
           followsUserLocation = {true}
           onMapReady = { () => _mapReady() }
           onLayout = { () => { 
-            if(CurrentMove.delivery_description != '' && CurrentMove.pickup_description != '') {
+            if(CurrentMove[0].delivery_description != '' && CurrentMove[0].pickup_description != '') {
               
               FitToCoordinates()
               
@@ -518,27 +526,27 @@ let BidSelection=(Id)=>
             }
           }>
 
-          {CurrentMove.pickup_description != '' &&
+          {CurrentMove[0].pickup_description != '' &&
             <MapView.Marker
-              coordinate={{latitude: CurrentMove.pickup_latitude, 
-                longitude: CurrentMove.pickup_longitude}}
+              coordinate={{latitude: CurrentMove[0].pickup_latitude, 
+                longitude: CurrentMove[0].pickup_longitude}}
               title={"Pickup"}
-              description={CurrentMove.pickup_description}
+              description={CurrentMove[0].pickup_description}
               pinColor = '#6cb6fb'
           />
           }
 
-          {CurrentMove.delivery_description  != '' &&
+          {CurrentMove[0].delivery_description  != '' &&
             <MapView.Marker
-              coordinate={{latitude: CurrentMove.delivery_latitude, 
-                longitude: CurrentMove.delivery_longitude}}
+              coordinate={{latitude: CurrentMove[0].delivery_latitude, 
+                longitude: CurrentMove[0].delivery_longitude}}
               title={"Delivery"}
-              description={CurrentMove.delivery_description}
+              description={CurrentMove[0].delivery_description}
               pinColor = '#34ea34'
           />
           }
 
-          {CurrentMove.pickup_description != '' && CurrentMove.delivery_description != '' &&
+          {CurrentMove[0].pickup_description != '' && CurrentMove[0].delivery_description != '' &&
 
 
             <MapView.Polyline 

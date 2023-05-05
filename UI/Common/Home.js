@@ -35,11 +35,12 @@ import { APIMaster } from '../../API/APIMaster';
 import Polyline from '@mapbox/polyline';
 import AsyncStorage from '@react-native-community/async-storage';
 import Modal from 'react-native-modal';
-import { EditMoveData, MoveData,CurrentMove } from '../../Redux/MoveData';
+// import { EditMoveData, MoveData,CurrentMove } from '../../Redux/MoveData';
 // import { event } from 'react-native-reanimated';
 import BlogContext from './../../BlogContext';
 
-import {updateStates,updateLocationState,updateMoveLocationState} from './../../Redux/Functions'
+import {updateLocationState, updateStates,updateMoveLocationState,updateDefaultLocationState, 
+  updateMoveState, updateEditMoveDataState, updateCurrentMoveState} from './../../Redux/Functions'
 
 
 
@@ -56,7 +57,13 @@ const Home = (props) => {
         }
   })
 
-  const { userData, setUserData } = React.useContext(BlogContext);
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
 
 
   const drawer=useRef(null)
@@ -77,8 +84,8 @@ const Home = (props) => {
   });
   let SrcSet = false
   let mapRegion = {
-    longitude: userData[0].current_longitude,
-    latitude: userData[0].current_latitude,
+    longitude: CurrentData[0].current_longitude,
+    latitude: CurrentData[0].current_latitude,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421
   }
@@ -156,14 +163,16 @@ const Home = (props) => {
             console.log('pos.coords.latitude',pos.coords.latitude)
             console.log('pos.coords.longitude',pos.coords.longitude)
 
-             DefaultLocationData.default_latitude = pos.coords.latitude
-             DefaultLocationData.default_longitude =   pos.coords.longitude
+            //  DefaultLocationData.default_latitude = pos.coords.latitude
+            //  DefaultLocationData.default_longitude =   pos.coords.longitude
+
+             updateDefaultLocationState(DefaultLocationData,setDefaultLocationData, pos.coords.latitude,pos.coords.longitude)
 
             // LocationData.current_latitude = pos.coords.latitude
             // LocationData.current_longitude =  pos.coords.longitude
 
-            updateLocationState(userData,setUserData,pos.coords.latitude,pos.coords.longitude)
-            
+
+            updateLocationState(CurrentData,setCurrentData,pos.coords.latitude,pos.coords.longitude)
 
             setPosition({
               latitude: pos.coords.latitude,
@@ -217,12 +226,16 @@ const Home = (props) => {
         // MoveLocationsData.delivery_latitude = result.data.result.geometry.location.lat
         // MoveLocationsData.delivery_longitude = result.data.result.geometry.location.lng
 
-        updateMoveLocationState(userData,setUserData,null,result.data.result.geometry.location.lat,result.data.result.geometry.location.lng)
+        updateMoveLocationState(MoveLocationsData,setMoveLocationsData,null,result.data.result.geometry.location.lat,result.data.result.geometry.location.lng)
+
 
         
 
-        DefaultLocationData.default_latitude = result.data.result.geometry.location.lat
-        DefaultLocationData.default_longitude = result.data.result.geometry.location.lng
+        // DefaultLocationData.default_latitude = result.data.result.geometry.location.lat
+        // DefaultLocationData.default_longitude = result.data.result.geometry.location.lng
+
+
+        updateDefaultLocationState(DefaultLocationData,setDefaultLocationData, result.data.result.geometry.location.lat,result.data.result.geometry.location.lng)
 
         SearchBar.current.setAddressText('')
         
@@ -242,47 +255,56 @@ const Home = (props) => {
     // MoveLocationsData.pickup_latitude = 0,
     // MoveLocationsData.pickup_longitude = 0,
     // MoveLocationsData.distance = 0
-    updateMoveLocationState(userData,setUserData,'',0,0,'',0,0,0)
+
+
+   updateMoveLocationState(MoveLocationsData,setMoveLocationsData,'',0,0,'',0,0,0)
+
+
   }
 
   let ResetEditMoveData=()=>{
-    EditMoveData.address_of_pickup = '',
-    EditMoveData.gps_of_pickup = '',
-    EditMoveData.address_of_delivery = '',
-    EditMoveData.gps_of_delivery = '',
-    EditMoveData.move_type_id = '',
-    EditMoveData.date_of_pickup = '',
-    EditMoveData.time_of_pickup = '',
-    EditMoveData.move_images = [],
-    EditMoveData.weight = 0,
-    EditMoveData.no_of_helpers = 0,
-    EditMoveData.description = '',
-    EditMoveData.consumer_vehicle_id = '',
-    EditMoveData.move_bids = []
+    // EditMoveData.address_of_pickup = '',
+    // EditMoveData.gps_of_pickup = '',
+    // EditMoveData.address_of_delivery = '',
+    // EditMoveData.gps_of_delivery = '',
+    // EditMoveData.move_type_id = '',
+    // EditMoveData.date_of_pickup = '',
+    // EditMoveData.time_of_pickup = '',
+    // EditMoveData.move_images = [],
+    // EditMoveData.weight = 0,
+    // EditMoveData.no_of_helpers = 0,
+    // EditMoveData.description = '',
+    // EditMoveData.consumer_vehicle_id = '',
+    // EditMoveData.move_bids = []
+
+
+    updateEditMoveDataState(EditMoveData,setEditMoveData,'','','','','','','','',0,0,'','',[])
 
 }
 
 let ResetMoveData=()=>{
-  MoveData.address_of_pickup = ''
-  MoveData.gps_of_pickup = ''
-  MoveData.address_of_delivery = ''
-  MoveData.move_type_id = ''
-  MoveData.pickup_unit_number = ''
-  MoveData.pickup_stairs = ''
-  MoveData.pickup_elevator_building = ''
-  MoveData.pickup_parking_info = ''
-  MoveData.delivery_unit_Number = ''
-  MoveData.delivery_stairs = ''
-  MoveData.delivery_elevator_building = ''
-  MoveData.delivery_parking_info = ''
-  MoveData.date_of_pickup = ''
-  MoveData.time_of_pickup = ''
-  MoveData.move_images = []
-  MoveData.weight = ''
-  MoveData.no_of_helpers = ''
-  MoveData.description = ''
-  MoveData.consumer_vehicle_id = ''
-  MoveData.move_bids = []
+  // MoveData.address_of_pickup = ''
+  // MoveData.gps_of_pickup = ''
+  // MoveData.address_of_delivery = ''
+  // MoveData.move_type_id = ''
+  // MoveData.pickup_unit_number = ''
+  // MoveData.pickup_stairs = ''
+  // MoveData.pickup_elevator_building = ''
+  // MoveData.pickup_parking_info = ''
+  // MoveData.delivery_unit_Number = ''
+  // MoveData.delivery_stairs = ''
+  // MoveData.delivery_elevator_building = ''
+  // MoveData.delivery_parking_info = ''
+  // MoveData.date_of_pickup = ''
+  // MoveData.time_of_pickup = ''
+  // MoveData.move_images = []
+  // MoveData.weight = ''
+  // MoveData.no_of_helpers = ''
+  // MoveData.description = ''
+  // MoveData.consumer_vehicle_id = ''
+  // MoveData.move_bids = []
+
+  updateMoveState(MoveData,setMoveData,'','','','','','','','','','','','','','','',[],'','','','',[],'')
 
 }
 
@@ -392,13 +414,15 @@ let ResetMoveData=()=>{
   }, []);
 
   let ClearMoveLocationsData=()=> {
-    MoveLocationsData.delivery_description= '';
-    MoveLocationsData.delivery_latitude= 0;
-    MoveLocationsData.delivery_longitude= 0;
-    MoveLocationsData.pickup_description= '';
-    MoveLocationsData.pickup_latitude= 0;
-    MoveLocationsData.pickup_longitude= 0;
-    MoveLocationsData.distance= 0;
+    // MoveLocationsData.delivery_description= '';
+    // MoveLocationsData.delivery_latitude= 0;
+    // MoveLocationsData.delivery_longitude= 0;
+    // MoveLocationsData.pickup_description= '';
+    // MoveLocationsData.pickup_latitude= 0;
+    // MoveLocationsData.pickup_longitude= 0;
+    // MoveLocationsData.distance= 0;
+
+    updateMoveLocationState(MoveLocationsData,setMoveLocationsData,'',0,0,'',0,0,0)
   }
 
   let GetAvailableMoveList = async()=>{
@@ -410,8 +434,8 @@ let ResetMoveData=()=>{
      }
      axios.get(APIMaster.URL + 
       APIMaster.Move.GetAvailableMoveList + userData[0].user_id + '?latitude='
-       +userData[0].current_latitude
-      +'&longitude='+ userData[0].current_longitude
+       +CurrentData[0].current_latitude
+      +'&longitude='+ CurrentData[0].current_longitude
         , axiosConfig)
       .then((response)=> {
     // console.log('Get Place Lat & long')
@@ -513,12 +537,12 @@ let ResetMoveData=()=>{
      console.log('mapView.current',mapView.current)
     if(mapView.current != null)
     {
-      if(userData[0].current_latitude != 0)
+      if(CurrentData[0].current_latitude != 0)
       {
     mapView.current.animateToRegion({ 
         
-      latitude: userData[0].current_latitude,
-      longitude:  userData[0].current_longitude,
+      latitude: CurrentData[0].current_latitude,
+      longitude:  CurrentData[0].current_longitude,
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421,
 
@@ -549,8 +573,8 @@ let ResetMoveData=()=>{
         <MapView  style={{ ...StyleSheet.absoluteFillObject }}
           ref = {mapView}
           initialRegion={{
-            longitude:  userData[0].current_longitude,
-            latitude:  userData[0].current_latitude,
+            longitude:  CurrentData[0].current_longitude,
+            latitude:  CurrentData[0].current_latitude,
             latitudeDelta: 30,
             longitudeDelta: 0.0421}}
           showsUserLocation = {true}
@@ -571,16 +595,24 @@ let ResetMoveData=()=>{
             onPress={() =>{
             
               props.navigation.navigate('ProviderMoveDetails')
-              CurrentMove.move_id = (item._id.toString().trim())
-              CurrentMove.provider_move_details_header = 'on'
-              CurrentMove.pickup_latitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[0])
-              CurrentMove.pickup_longitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[1])
-              CurrentMove.pickup_description = item.address_of_pickup.toString()
-              CurrentMove.delivery_latitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[0])
-              CurrentMove.delivery_longitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[1])
-              CurrentMove.delivery_description = item.address_of_delivery.toString()   
+
+              // CurrentMove.move_id = (item._id.toString().trim())
+              // CurrentMove.provider_move_details_header = 'on'
+              // CurrentMove.pickup_latitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[0])
+              // CurrentMove.pickup_longitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[1])
+              // CurrentMove.pickup_description = item.address_of_pickup.toString()
+              // CurrentMove.delivery_latitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[0])
+              // CurrentMove.delivery_longitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[1])
+              // CurrentMove.delivery_description = item.address_of_delivery.toString()   
+
+              updateCurrentMoveState(CurrentMove,setCurrentMove,item._id.toString().trim(),'on',item.address_of_delivery.toString()
+              ,parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[0])
+              ,parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[1]),
+              item.address_of_pickup.toString(),parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[0]),
+              parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[1])
+              )
               
-              console.log('test gps ',CurrentMove)
+              // console.log('test gps ',CurrentMove)
              
      }}
          >
@@ -635,7 +667,10 @@ let ResetMoveData=()=>{
             onPress={(data, details = null) => {
               // ClearMoveLocationsData()
 
-              MoveLocationsData.delivery_description = data.description
+              // MoveLocationsData.delivery_description = data.description
+
+
+               updateMoveLocationState(MoveLocationsData,setMoveLocationsData,data.description)
               
               GetPlaceLatLng(details.place_id)
 
@@ -695,11 +730,14 @@ let ResetMoveData=()=>{
             renderItem={({item})=>(
 
               <HistoryItem ItemTitle = {item.delivery_address} Function = {()=>{
-                console.log(item.delivery_address)}} Function = {()=>{
+                console.log(item.delivery_address)}} Function={()=>{
                   ResetMoveData()
                   ResetEditMoveData()
                   ResetMoveLocationsData()
-                  MoveLocationsData.delivery_description = item.delivery_address
+                 // MoveLocationsData.delivery_description = item.delivery_address
+
+                updateMoveLocationState(MoveLocationsData,setMoveLocationsData,item.delivery_address)
+
                   GetPlaceLatLng(item.delivery_place_id)
                 setLocationHistory_Visible(false)}} />
               // <Text>123</Text>

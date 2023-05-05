@@ -20,7 +20,22 @@ import axios from 'axios';
 import { APIMaster } from '../../API/APIMaster';
 import { MoveData } from '../../Redux/MoveData';
 
+
+import BlogContext from './../../BlogContext';
+import {updateStates,updateLocationState, updateDefaultLocationState, updateMoveState} from './../../Redux/Functions'
+
+
 const SelectLocation = (props) => {
+
+
+
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
 
 const call_id = props.navigation.state.params.call_id
 const screen_title = props.navigation.state.params.screen_title
@@ -44,21 +59,32 @@ let GetPlaceLatLng = async(place_id)=>{
       {
         if(call_id == 'src')
         {
-          MoveLocationsData.pickup_latitude = result.data.result.geometry.location.lat
-          MoveLocationsData.pickup_longitude = result.data.result.geometry.location.lng
+          updateMoveLocationState(MoveLocationsData,setMoveLocationsData,null,null,null,null,
+            result.data.result.geometry.location.lat,result.data.result.geometry.location.lng)
 
         }
         else
         {
-          MoveLocationsData.delivery_latitude = result.data.result.geometry.location.lat
-          MoveLocationsData.delivery_longitude = result.data.result.geometry.location.lng
 
-          MoveData.delivery_place_id = place_id
+          // MoveLocationsData.delivery_latitude = result.data.result.geometry.location.lat
+          // MoveLocationsData.delivery_longitude = result.data.result.geometry.location.lng
+
+
+          updateMoveLocationState(MoveLocationsData,setMoveLocationsData,null,result.data.result.geometry.location.lat,result.data.result.geometry.location.lng)
+
+          // MoveData.delivery_place_id = place_id
+
+          updateMoveState(MoveData,setMoveData,null,null,null,null,null,null,null,null,null,null
+            ,null,null,null,null,null,null,null,null,null,null,null,place_id)
 
         }
 
-        DefaultLocationData.default_latitude = result.data.result.geometry.location.lat
-        DefaultLocationData.default_longitude = result.data.result.geometry.location.lng
+        // DefaultLocationData.default_latitude = result.data.result.geometry.location.lat
+        // DefaultLocationData.default_longitude = result.data.result.geometry.location.lng
+
+
+
+        updateDefaultLocationState(DefaultLocationData,setDefaultLocationData, result.data.result.geometry.location.lat ,result.data.result.geometry.location.lng)
 
         props.navigation.replace('CreateMove_Location', {
           move_id: props.navigation.state.params.move_id != null ? props.navigation.state.params.move_id:''
@@ -126,9 +152,9 @@ let GetPlaceLatLng = async(place_id)=>{
                {
                  console.log('call id = ')
                  if(call_id == 'src')
-                 {MoveLocationsData.pickup_description = data.description}
+                 {MoveLocationsData[0].pickup_description = data.description}
                  else
-                 {MoveLocationsData.delivery_description = data.description}
+                 {MoveLocationsData[0].delivery_description = data.description}
                  
                  GetPlaceLatLng(details.place_id)
 

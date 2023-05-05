@@ -21,10 +21,25 @@ import Loading_Data from '../../Components/LoadingData';
 import Toast from 'react-native-simple-toast';
 
 
-const CreateMove_Details = (props) => {
+import BlogContext from './../../BlogContext';
+import {updateMoveState, updateStates} from './../../Redux/Functions'
 
-  const [SrcLocation, setSrcLocation] = useState(MoveData.address_of_pickup)
-  const [DestLocation, setDestLocation] = useState(MoveData.address_of_delivery)
+
+const CreateMove_Details = (props) => {
+  
+ const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
+
+
+
+
+  const [SrcLocation, setSrcLocation] = useState(MoveData[0].address_of_pickup)
+  const [DestLocation, setDestLocation] = useState(MoveData[0].address_of_delivery)
   const [SourceUnit, setSourceUnit] = useState('')
   const [SrcHasStairs, setSrcHasStairs] = useState(true)
   const [SrcStairsQty, setSrcStairsQty] = useState(0)
@@ -35,6 +50,11 @@ const CreateMove_Details = (props) => {
   const [DestHasElevator, setDestHasElevator] = useState(false)
   const [SrcBuildingInfo, setSrcBuildingInfo] = useState('')
   const [DestBuildingInfo, setDestBuildingInfo] = useState('')
+
+
+
+ 
+
 
 
   useEffect(()=>{
@@ -135,15 +155,28 @@ const CreateMove_Details = (props) => {
     else
     {
      
-    MoveData.pickup_unit_number = SourceUnit
-    MoveData.pickup_stairs = SrcHasStairs ? SrcStairsQty.toString() : 'no'
-    MoveData.pickup_elevator_building = SrcHasElevator ? 'yes' : 'no'
-    MoveData.pickup_parking_info = SrcBuildingInfo
+    // MoveData.pickup_unit_number = SourceUnit
+    // MoveData.pickup_stairs = SrcHasStairs ? SrcStairsQty.toString() : 'no'
+    // MoveData.pickup_elevator_building = SrcHasElevator ? 'yes' : 'no'
+    // MoveData.pickup_parking_info = SrcBuildingInfo
 
-    MoveData.delivery_unit_Number = DestinationUnit
-    MoveData.delivery_stairs = DestHasStairs ? DestStairsQty.toString() : 'no'
-    MoveData.delivery_elevator_building = DestHasElevator ? 'yes' : 'no'
-    MoveData.delivery_parking_info = DestBuildingInfo
+    // MoveData.delivery_unit_Number = DestinationUnit
+    // MoveData.delivery_stairs = DestHasStairs ? DestStairsQty.toString() : 'no'
+    // MoveData.delivery_elevator_building = DestHasElevator ? 'yes' : 'no'
+    // MoveData.delivery_parking_info = DestBuildingInfo
+
+
+
+    updateMoveState(MoveData,setMoveData,null,null,null,null,null,SourceUnit,
+      SrcHasStairs ? SrcStairsQty.toString() : 'no',SrcHasElevator ? 'yes' : 'no',SrcBuildingInfo,DestinationUnit,
+      DestHasStairs ? DestStairsQty.toString() : 'no', DestHasElevator ? 'yes' : 'no',DestBuildingInfo
+      )
+
+
+
+
+
+
     if(props.navigation.getParam('_edit') == false)
     {
     props.navigation.push('CreateMove_DateTime', {_edit: false})

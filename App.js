@@ -61,9 +61,8 @@ import realm from './UI/Common/realm'
 import ProviderMovesControl from './UI/Provider/ProviderMovesControl'
 
 
-import BlogContext from './BlogContext';
-
-import {updateStates} from './Redux/Functions'
+// import BlogContext from './BlogContext';
+// import {updateStates} from './Redux/Functions'
 
 
 
@@ -77,7 +76,14 @@ export default function App ()  {
   const [NoticCount, setNoticCount] = useState('0');
   const [ctrl, setctrl] = useState(0);
 
-  const { userData, setUserData } = React.useContext(BlogContext);
+  
+  // const { userData,setUserData,CurrentData,setCurrentData,
+  //   MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+  //   MoveData,setMoveData,
+  //   EditMoveData,setEditMoveData,
+  //   CurrentMove,setCurrentMove,
+  //   PDData,setPDData,
+  //   VDData,setVDData } = React.useContext(BlogContext);
 
   // const [userData, setUserData] = useState([
   //   {
@@ -98,33 +104,33 @@ export default function App ()  {
  
   let interval
 
-   let GetNoticCount=()=>{
+  //  let GetNoticCount=()=>{
 
             
-    var axiosConfig = {
-      headers:{
-        Accept : 'application/json',
-        Content_Type : 'application/json'
-      }
-     }
-     axios.get(APIMaster.URL + 
-      APIMaster.NotificationsSetting.GetPushNotifications +
-      userData[0].user_id
-        )
-      .then((response)=> {
-        if(response.data.status == 1)
-        {
-        // value.Counter.setCount(response.data.badge)
-        console.log('response.data.badge', userData[0].user_id,response.data.badge)
+  //   var axiosConfig = {
+  //     headers:{
+  //       Accept : 'application/json',
+  //       Content_Type : 'application/json'
+  //     }
+  //    }
+  //    axios.get(APIMaster.URL + 
+  //     APIMaster.NotificationsSetting.GetPushNotifications +
+  //     userData[0].user_id
+  //       )
+  //     .then((response)=> {
+  //       if(response.data.status == 1)
+  //       {
+  //       // value.Counter.setCount(response.data.badge)
+  //       console.log('response.data.badge', userData[0].user_id,response.data.badge)
         
-        }
-        // setctrl(true)
+  //       }
+  //       // setctrl(true)
 
-   })
-   .catch( (error)=> {
-     console.log('notif error  : ',error)  
-   })
-   }
+  //  })
+  //  .catch( (error)=> {
+  //    console.log('notif error  : ',error)  
+  //  })
+  //  }
 
       let GetUser = async()=>{
         var UserIds =  await AsyncStorage.getItem("user_id")
@@ -185,8 +191,6 @@ export default function App ()  {
               setNoticCount(pr[0]['Counter'].toString())
             }
             
-
-
           },[])
 
 
@@ -608,7 +612,7 @@ ProviderMovesControl:{screen:ProviderMovesControl} ,
     headerMode: 'none',
     headerVisible: 'false',
     // initialRouteName: 'ChangePincode'
-    initialRouteName: 'Login'
+    initialRouteName: 'Splash'
   }
  
  )

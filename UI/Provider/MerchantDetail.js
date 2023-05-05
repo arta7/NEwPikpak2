@@ -34,7 +34,13 @@ const MerchantDetail = (props) => {
   const [IsFirst, setIsFirst] = useState(false)
   const [DeleteConfirm_Visible, setDeleteConfirm_Visible] = useState(false)
 
-  const { userData, setUserData } = React.useContext(BlogContext);
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
 
   const [BankAccountList, setBankAccountList] = useState([])
 

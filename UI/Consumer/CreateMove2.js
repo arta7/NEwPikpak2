@@ -20,6 +20,9 @@ import Toast from 'react-native-simple-toast';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { GoogleMaps } from '../../Redux/GoogleMapsData';
 
+import BlogContext from './../../BlogContext';
+import {updateMoveState, updateStates} from './../../Redux/Functions'
+
 
 const App = (props) => {
 
@@ -31,6 +34,15 @@ const App = (props) => {
   const [SelectedMoveTypeId, setSelectedMoveTypeId] =useState(0)
   const [SelectedMoveTypeTitle, setSelectedMoveTypeTitle] = useState('')
   const [MoveTypeList, setMoveTypeList] = useState([])
+
+
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
 
   let GetMoveType = async()=>{
     
@@ -132,11 +144,19 @@ const App = (props) => {
     }
     else
     {
-      MoveData.address_of_pickup = SrcLocation,
-      MoveData.gps_of_pickup = '',
-      MoveData.address_of_delivery = DestLocation,
-      MoveData.gps_of_delivery = '',
-      MoveData.move_type_id = SelectedMoveTypeId
+
+      // MoveData.address_of_pickup = SrcLocation,
+      // MoveData.gps_of_pickup = '',
+      // MoveData.address_of_delivery = DestLocation,
+      // MoveData.gps_of_delivery = '',
+      // MoveData.move_type_id = SelectedMoveTypeId
+
+      
+      updateMoveState(MoveData,setMoveData,SrcLocation,"[" + SrcLatitude.toString() + " , " + SrcLongitude.toString() + "]",DestLocation
+      ,"[" + DestLatitude.toString() + " , " + DestLongitude.toString() + "]",SelectedMoveTypeId)
+
+
+
 
       //...............................................
 

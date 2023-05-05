@@ -19,9 +19,22 @@ import { LoginData } from '../../Redux/LoginData';
 import Loading_Data from '../../Components/LoadingData';
 import Toast from 'react-native-simple-toast';
 
+
+
+import BlogContext from './../../BlogContext';
+import {updatePDDataSatte, updateStates} from './../../Redux/Functions'
+
 const VehicleProperties = (props) => {
 
 
+
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
 
 
 
@@ -45,11 +58,16 @@ const [EquipmentList, setEquipmentList] = useState([])
 
 let DataValidation=()=>{
 
-  PDData.tow_hitch = Hitch ? 'yes' : 'no'
-  PDData.trailer = Trailer ? 'yes' : 'no'
-  PDData.lift_up_to = Lift ? 'yes' : 'no'
-  PDData.trailer_open = Open ? 'yes' : 'no'
-  PDData.equipment_id = Equipment_Id
+  // PDData.tow_hitch = Hitch ? 'yes' : 'no'
+  // PDData.trailer = Trailer ? 'yes' : 'no'
+  // PDData.lift_up_to = Lift ? 'yes' : 'no'
+  // PDData.trailer_open = Open ? 'yes' : 'no'
+  // PDData.equipment_id = Equipment_Id
+
+
+  updatePDDataSatte(PDData,setPDData,null,null,null,null,null,null
+    ,Hitch ? 'yes' : 'no',Trailer ? 'yes' : 'no',Lift ? 'yes' : 'no',
+    null,null,null,null,null,null,null,null,Open ? 'yes' : 'no',Equipment_Id)
 
   props.navigation.navigate('DriverDocument')
 

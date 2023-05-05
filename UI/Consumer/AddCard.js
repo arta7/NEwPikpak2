@@ -40,7 +40,13 @@ const AddCard = (props) => {
   const [YearList_Visible, setYearList_Visible] = useState(false)
   const [MonthList_Visible, setMonthList_Visible] = useState(false)
 
-  const { userData, setUserData } = React.useContext(BlogContext);
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
 
   const MonthList = useState(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'])
 

@@ -37,7 +37,13 @@ const ManageCard = (props) => {
     // {_id: 5, number: 'Card #5', type: 'xxxx xxxx xxxx xxxx', expire_date: '', default: 0}
   ])
 
-  const { userData, setUserData } = React.useContext(BlogContext);
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
   
 
 

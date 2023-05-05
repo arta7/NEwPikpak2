@@ -25,7 +25,13 @@ const Notifications = (props) => {
   const [NotificationEnable, setNotificationEnable] = useState(true)
   const [Notification, setNotification] = useState([])
 
-  const { userData, setUserData } = React.useContext(BlogContext);
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
    
   let GetNotification = async()=>{
     var axiosConfig = {

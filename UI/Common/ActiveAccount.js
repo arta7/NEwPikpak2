@@ -21,7 +21,7 @@ import { LoginData } from '../../Redux/LoginData';
 
 
 import BlogContext from './../../BlogContext';
-import {updateStates} from './../../Redux/Functions'
+import {updateStates,updateLocationState} from './../../Redux/Functions'
 
 const ChangePassword = (props) => {
 
@@ -30,7 +30,13 @@ const ChangePassword = (props) => {
   const [active, setactive] = useState('')
   const [Loader_Visible, setLoader_Visible] = useState(false)
 
-  const { userData, setUserData } = React.useContext(BlogContext);
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
 
   let BlurControls=()=>{
     _email.current.blur()

@@ -30,7 +30,7 @@ import { MoveData, CurrentMove } from '../../Redux/MoveData';
 
 
 import BlogContext from './../../BlogContext';
-import {updateStates} from './../../Redux/Functions'
+import {updateMoveState, updateStates} from './../../Redux/Functions'
 
 
 let PickupLatitude
@@ -44,7 +44,13 @@ const ProviderMoveDetails = (props) => {
 
   const [Loader_Visible, setLoader_Visible] = useState(false)
 
-  const { userData, setUserData } = React.useContext(BlogContext);
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
 
 const [BidsCount, SetBidsCount] = useState(0)
 const [MoveTypeTitle, SetMoveTypeTitle] = useState('')
@@ -198,7 +204,10 @@ let GetMove = (_move_id)=>{
                 getDirections(response.data.move.gps_of_pickup[0] + " , " + response.data.move.gps_of_pickup[1] ,
                               response.data.move.gps_of_delivery[0] + " , " + response.data.move.gps_of_delivery[1])
                 
-                MoveData.move_bids = response.data.bids
+                // MoveData.move_bids = response.data.bids
+                
+
+                updateMoveState(MoveData,setMoveData,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,response.data.bids)
 
                 if(response.data.move.move_files.length != 0)
                 {
@@ -258,7 +267,7 @@ let ChangeTransaction=(action)=>{
     }
    }
    var params = {
-     id:CurrentMove.move_id,
+     id:CurrentMove[0].move_id,
      action:action
    }
 
@@ -299,10 +308,10 @@ let SetMoveStatus=()=>
 }
 
 let FitToCoordinates=()=> {
-  console.log('latitude: ',CurrentMove.pickup_latitude , 'longitude: ',CurrentMove.pickup_longitude)
+  console.log('latitude: ',CurrentMove[0].pickup_latitude , 'longitude: ',CurrentMove[0].pickup_longitude)
   mapView.current.fitToCoordinates([
-      { latitude: CurrentMove.pickup_latitude, longitude: CurrentMove.pickup_longitude }, 
-      { latitude: CurrentMove.delivery_latitude, longitude: CurrentMove.delivery_longitude }
+      { latitude: CurrentMove[0].pickup_latitude, longitude: CurrentMove[0].pickup_longitude }, 
+      { latitude: CurrentMove[0].delivery_latitude, longitude: CurrentMove[0].delivery_longitude }
     ], {
     edgePadding: {
       bottom: 200,
@@ -342,21 +351,21 @@ let BidSelection=(Id)=>
 
   let _mapReady = () => {
 
-    if(CurrentMove.pickup_description == '' && CurrentMove.delivery_description == '') {
-      animateMap(userData[0].current_latitude, userData[0].current_longitude)
+    if(CurrentMove[0].pickup_description == '' && CurrentMove[0].delivery_description == '') {
+      animateMap(CurrentData[0].current_latitude, CurrentData[0].current_longitude)
     }
-    else if(CurrentMove.pickup_description != '' && CurrentMove.delivery_description == '') {
-      animateMap(CurrentMove.pickup_latitude, CurrentMove.pickup_longitude)
+    else if(CurrentMove[0].pickup_description != '' && CurrentMove[0].delivery_description == '') {
+      animateMap(CurrentMove[0].pickup_latitude, CurrentMove[0].pickup_longitude)
     }
-    else if((CurrentMove.pickup_description != '' && CurrentMove.delivery_description == '') || 
-            (CurrentMove.pickup_description == '' && CurrentMove.delivery_description != '')) {
-      animateMap(CurrentMove.delivery_latitude, CurrentMove.delivery_longitude)
+    else if((CurrentMove[0].pickup_description != '' && CurrentMove[0].delivery_description == '') || 
+            (CurrentMove[0].pickup_description == '' && CurrentMove[0].delivery_description != '')) {
+      animateMap(CurrentMove[0].delivery_latitude, CurrentMove[0].delivery_longitude)
     }
   }
 
   useEffect(()=>{
     //console.log('CurrentMove.move_id',CurrentMove.move_id)
-    GetMove(CurrentMove.move_id)
+    GetMove(CurrentMove[0].move_id)
     GetVehicleId()
     GetMerchantDetail()
   }, [])
@@ -365,7 +374,7 @@ let BidSelection=(Id)=>
 
     <View style={styles.Container}>
       
-      {CurrentMove.provider_move_details_header == 'on' &&
+      {CurrentMove[0].provider_move_details_header == 'on' &&
       <Headers HeaderHeight = {hp('6.5%')} HeaderTitle = {'Move Details'} 
                LeftIconVisible = {true} RightIconVisible = {false}
                LeftIconName = {'angle-left'} LeftIconColor = {'#FFF'}
@@ -396,11 +405,11 @@ let BidSelection=(Id)=>
       
         <MoveThumbnail  ImageSrc = {MoveImageUri}
                         ShowButtons = {false} ShowPayButton = {   true } 
-                        ButtonTitle = {CurrentMove.provider_move_details_header == 'on' ? 'Bid Now' : 'Change'}
-                        Function = {()=>{CurrentMove.provider_move_details_header == 'on' ? 
+                        ButtonTitle = {CurrentMove[0].provider_move_details_header == 'on' ? 'Bid Now' : 'Change'}
+                        Function = {()=>{CurrentMove[0].provider_move_details_header == 'on' ? 
                         showBid==true ? 
                       ((userData[0].status == 1  || userData[0].status == -1 ) && userData[0].InlineStatus != 0 ) ?
-                        props.navigation.navigate('BidNow', {move_id : CurrentMove.move_id,
+                        props.navigation.navigate('BidNow', {move_id : CurrentMove[0].move_id,
                                            user_id : userData[0].user_id,
                                           move_type_title : MoveTypeTitle,
                                         move_date_time : MoveDateTime,
@@ -559,8 +568,8 @@ let BidSelection=(Id)=>
       <MapView  style={{ ...StyleSheet.absoluteFillObject }}
           ref = {mapView}
           initialRegion={{
-            longitude: userData[0].current_longitude,
-            latitude: userData[0].current_latitude,
+            longitude: CurrentData[0].current_longitude,
+            latitude: CurrentData[0].current_latitude,
             latitudeDelta: 30,
             longitudeDelta: 0.0421}}
           showsUserLocation = {true}
@@ -568,7 +577,7 @@ let BidSelection=(Id)=>
           followsUserLocation = {true}
           onMapReady = { () => _mapReady() }
           onLayout = { () => { 
-            if(CurrentMove.delivery_description != '' && CurrentMove.pickup_description != '') {
+            if(CurrentMove[0].delivery_description != '' && CurrentMove[0].pickup_description != '') {
               
               FitToCoordinates()
               
@@ -576,27 +585,27 @@ let BidSelection=(Id)=>
             }
           }>
 
-          {CurrentMove.pickup_description != '' &&
+          {CurrentMove[0].pickup_description != '' &&
             <MapView.Marker
-              coordinate={{latitude: CurrentMove.pickup_latitude, 
-                longitude: CurrentMove.pickup_longitude}}
+              coordinate={{latitude: CurrentMove[0].pickup_latitude, 
+                longitude: CurrentMove[0].pickup_longitude}}
               title={"Pickup"}
-              description={CurrentMove.pickup_description}
+              description={CurrentMove[0].pickup_description}
               pinColor = '#6cb6fb'
           />
           }
 
-          {CurrentMove.delivery_description  != '' &&
+          {CurrentMove[0].delivery_description  != '' &&
             <MapView.Marker
-              coordinate={{latitude: CurrentMove.delivery_latitude, 
-                longitude: CurrentMove.delivery_longitude}}
+              coordinate={{latitude: CurrentMove[0].delivery_latitude, 
+                longitude: CurrentMove[0].delivery_longitude}}
               title={"Delivery"}
-              description={CurrentMove.delivery_description}
+              description={CurrentMove[0].delivery_description}
               pinColor = '#34ea34'
           />
           }
 
-          {CurrentMove.pickup_description != '' && CurrentMove.delivery_description != '' &&
+          {CurrentMove[0].pickup_description != '' && CurrentMove[0].delivery_description != '' &&
 
 
             <MapView.Polyline 

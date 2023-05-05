@@ -29,7 +29,7 @@ import { MoveData, CurrentMove } from '../../Redux/MoveData';
 import NativeIntentAndroid from 'react-native/Libraries/Linking/NativeLinking'
 
 import BlogContext from './../../BlogContext';
-import {updateStates} from './../../Redux/Functions'
+import {updateMoveState, updateStates} from './../../Redux/Functions'
 
 
 
@@ -55,7 +55,7 @@ const ActiveMoveDetails = (props) => {
   const [PickupAddress, SetPickupAddress] = useState('')
   const [DeliveryAddress, SetDeliveryAddress] = useState('')
   const [QouteComment, SetQouteComment] = useState('')
-  const CurrentMoveId = CurrentMove.move_id
+  const CurrentMoveId = CurrentMove[0].move_id
   const [coords, setcoords] = useState([])
   const [BidId, SetBidId] = useState('')
   const [Amount, SetAmount] = useState(0)
@@ -67,7 +67,13 @@ const ActiveMoveDetails = (props) => {
   const mapView = useRef(null);
   const [UpdateScreen, setUpdateScreen] = useState(1)
 
-  const { userData, setUserData } = React.useContext(BlogContext);
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
 
   
   let CancleBid =(move_id, bid_id)=>{
@@ -149,7 +155,11 @@ let GetMove = (_move_id)=>{
                 getDirections(response.data.move.gps_of_pickup[0] + " , " + response.data.move.gps_of_pickup[1] ,
                               response.data.move.gps_of_delivery[0] + " , " + response.data.move.gps_of_delivery[1])
                 
-                MoveData.move_bids = response.data.bids
+                // MoveData.move_bids = response.data.bids
+
+
+                updateMoveState(MoveData,setMoveData,null,null,null,null,null,null,null,null,null
+                  ,null,null,null,null,null,null,null,null,null,null,null,response.data.bids)
 
                 for(let i=0; i < response.data.move.bids.length; i++)
                 {
@@ -239,18 +249,18 @@ let GetPaymentCardList =()=>{
 
 let  _mapReady = () => {
   console.log("map ready");
-  if(MoveLocationsData.pickup_description == '' && MoveLocationsData.delivery_description == '')
+  if(MoveLocationsData[0].pickup_description == '' && MoveLocationsData[0].delivery_description == '')
   {
-    animateMap(userData[0].current_latitude, userData[0].current_longitude)
+    animateMap(CurrentData[0].current_latitude, CurrentData[0].current_longitude)
   }
-  else if(MoveLocationsData.pickup_description != '' && MoveLocationsData.delivery_description == '')
+  else if(MoveLocationsData[0].pickup_description != '' && MoveLocationsData[0].delivery_description == '')
   {
-    animateMap(MoveLocationsData.pickup_latitude, MoveLocationsData.pickup_longitude)
+    animateMap(MoveLocationsData[0].pickup_latitude, MoveLocationsData[0].pickup_longitude)
   }
-  else if((MoveLocationsData.pickup_description != '' && MoveLocationsData.delivery_description == '') || 
-          (MoveLocationsData.pickup_description == '' && MoveLocationsData.delivery_description != ''))
+  else if((MoveLocationsData[0].pickup_description != '' && MoveLocationsData[0].delivery_description == '') || 
+          (MoveLocationsData[0].pickup_description == '' && MoveLocationsData[0].delivery_description != ''))
   {
-    animateMap(MoveLocationsData.delivery_latitude, MoveLocationsData.delivery_longitude)
+    animateMap(MoveLocationsData[0].delivery_latitude, MoveLocationsData[0].delivery_longitude)
   }
 }
 
@@ -357,7 +367,7 @@ useEffect(()=>{
  const animateMap = (lat, lng) => {
    if(mapView.current != null)
    {
-     if(userData[0].current_latitude != 0)
+     if(CurrentData[0].current_latitude != 0)
      {
    mapView.current.animateToRegion({ 
        
@@ -411,10 +421,10 @@ let PaymentMethodeSelection=(Id)=>
 
 
   let FitToCoordinates=()=> {
-    console.log('latitude: ',CurrentMove.pickup_latitude , 'longitude: ',CurrentMove.pickup_longitude)
+    console.log('latitude: ',CurrentMove[0].pickup_latitude , 'longitude: ',CurrentMove[0].pickup_longitude)
     mapView.current.fitToCoordinates([
-        { latitude: CurrentMove.pickup_latitude, longitude: CurrentMove.pickup_longitude }, 
-        { latitude: CurrentMove.delivery_latitude, longitude: CurrentMove.delivery_longitude }
+        { latitude: CurrentMove[0].pickup_latitude, longitude: CurrentMove[0].pickup_longitude }, 
+        { latitude: CurrentMove[0].delivery_latitude, longitude: CurrentMove[0].delivery_longitude }
       ], {
       edgePadding: {
         bottom: 200,
@@ -474,7 +484,7 @@ let PaymentMethodeSelection=(Id)=>
       <View style = {{width: '100%', height: hp('9%'), marginTop: hp('0.5%'), flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: ColorPalet.MainBackground}}>
 
         <ActiveMoveInfo MoveTypeTitle = {MoveTypeTitle} MoveDateTime = {MoveDateTime}
-         Function = {()=>{CancleBid(CurrentMove.move_id, BidId)}} ButtonVisible = {true} payment_status=''/>
+         Function = {()=>{CancleBid(CurrentMove[0].move_id, BidId)}} ButtonVisible = {true} payment_status=''/>
 
       </View>
 
@@ -593,8 +603,8 @@ let PaymentMethodeSelection=(Id)=>
       <MapView  style={{ ...StyleSheet.absoluteFillObject }}
           ref = {mapView}
           initialRegion={{
-            longitude: userData[0].current_longitude,
-            latitude: userData[0].current_latitude,
+            longitude: CurrentData[0].current_longitude,
+            latitude: CurrentData[0].current_latitude,
             latitudeDelta: 30,
             longitudeDelta: 0.0421}}
           showsUserLocation = {true}
@@ -602,7 +612,7 @@ let PaymentMethodeSelection=(Id)=>
           followsUserLocation = {true}
           onMapReady = { () => _mapReady() }
           onLayout = { () => { 
-            if(CurrentMove.delivery_description != '' && CurrentMove.pickup_description != '') {
+            if(CurrentMove[0].delivery_description != '' && CurrentMove[0].pickup_description != '') {
               
               FitToCoordinates()
               
@@ -610,27 +620,27 @@ let PaymentMethodeSelection=(Id)=>
             }
           }>
 
-          {CurrentMove.pickup_description != '' &&
+          {CurrentMove[0].pickup_description != '' &&
             <MapView.Marker
-              coordinate={{latitude: CurrentMove.pickup_latitude, 
-                longitude: CurrentMove.pickup_longitude}}
+              coordinate={{latitude: CurrentMove[0].pickup_latitude, 
+                longitude: CurrentMove[0].pickup_longitude}}
               title={"Pickup"}
-              description={CurrentMove.pickup_description}
+              description={CurrentMove[0].pickup_description}
               pinColor = '#6cb6fb'
           />
           }
 
-          {CurrentMove.delivery_description  != '' &&
+          {CurrentMove[0].delivery_description  != '' &&
             <MapView.Marker
-              coordinate={{latitude: CurrentMove.delivery_latitude, 
-                longitude: CurrentMove.delivery_longitude}}
+              coordinate={{latitude: CurrentMove[0].delivery_latitude, 
+                longitude: CurrentMove[0].delivery_longitude}}
               title={"Delivery"}
-              description={CurrentMove.delivery_description}
+              description={CurrentMove[0].delivery_description}
               pinColor = '#34ea34'
           />
           }
 
-          {CurrentMove.pickup_description != '' && CurrentMove.delivery_description != '' &&
+          {CurrentMove[0].pickup_description != '' && CurrentMove[0].delivery_description != '' &&
 
 
             <MapView.Polyline 

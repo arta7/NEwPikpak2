@@ -32,7 +32,13 @@ const ProfessionalDetails = (props) => {
 
 
 
-  const { userData, setUserData } = React.useContext(BlogContext);
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
 // ******************************************************
 const [OrganizationType, setOrganizationType] = useState('Individual')
 const [VehiclePhoto, setVehiclePhoto] = useState('')

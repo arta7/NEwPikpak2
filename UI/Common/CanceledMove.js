@@ -13,6 +13,9 @@ import {Drawer} from 'native-base';
 import Sidebar from '../Common/Sidebar';
 
 
+import BlogContext from './../../BlogContext';
+import {updateStates,updateLocationState} from './../../Redux/Functions'
+
 
 const CanceledMove = (props) => {
 
@@ -25,6 +28,16 @@ const CanceledMove = (props) => {
     // {title: 'Canceled Move #4', date: '08/01/2021 11:00 AM'},
     // {title: 'Canceled Move #5', date: '09/01/2021 08:20 AM'},
   ])
+
+
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
+
 
   let SetNotificationEnable=(_state)=>
   {

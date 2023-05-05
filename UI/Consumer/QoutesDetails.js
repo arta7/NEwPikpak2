@@ -26,20 +26,26 @@ import { MoveData,
   CurrentMove 
 } from '../../Redux/MoveData';
 
-
 import BlogContext from './../../BlogContext';
-import {updateStates} from './../../Redux/Functions'
+import {updateMoveState, updateStates} from './../../Redux/Functions'
 
 
 const QoutesDetails = (props) => {
 
+
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
+
   const [Loader_Visible, setLoader_Visible] = useState(false)
 
-  const CurrentMoveId = CurrentMove.move_id
+  const CurrentMoveId = CurrentMove[0].move_id
 
   const [coords, setcoords] = useState([])
-
-  const { userData, setUserData } = React.useContext(BlogContext);
 
   const [BidsCount, SetBidsCount] = useState('')
   const [MoveTypeTitle, SetMoveTypeTitle] = useState('')
@@ -56,7 +62,7 @@ const QoutesDetails = (props) => {
   const animateMap = (lat, lng) => {
     if(mapView.current != null)
     {
-      if(userData[0].current_latitude != 0)
+      if(CurrentData[0].current_latitude != 0)
       {
     mapView.current.animateToRegion({ 
         
@@ -75,8 +81,8 @@ const QoutesDetails = (props) => {
     if(mapView.current != null)
     {
     mapView.current.fitToCoordinates([
-        { latitude: CurrentMove.pickup_latitude, longitude: CurrentMove.pickup_longitude }, 
-        { latitude: CurrentMove.delivery_latitude, longitude: CurrentMove.delivery_longitude }
+        { latitude: CurrentMove[0].pickup_latitude, longitude: CurrentMove[0].pickup_longitude }, 
+        { latitude: CurrentMove[0].delivery_latitude, longitude: CurrentMove[0].delivery_longitude }
       ], {
       edgePadding: {
         bottom: 200,
@@ -131,15 +137,20 @@ const QoutesDetails = (props) => {
 
         SetQouteWeight(response.data.move.weight)
         
-        getDirections(CurrentMove.pickup_latitude + " , " + CurrentMove.pickup_longitude ,
-                      CurrentMove.delivery_latitude + " , " + CurrentMove.delivery_longitude)
+        getDirections(CurrentMove[0].pickup_latitude + " , " + CurrentMove[0].pickup_longitude ,
+                      CurrentMove[0].delivery_latitude + " , " + CurrentMove[0].delivery_longitude)
         
         // if(response.data.move.move_files.length != 0)
         {
           setMoveImageUri(response.data.move.move_files)
         }
         
-        MoveData.move_bids = response.data.bids
+        // MoveData.move_bids = response.data.bids
+
+        updateMoveState(MoveData,setMoveData,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,response.data.bids)
+
+
+
         
       }
       setLoader_Visible(false)
@@ -174,22 +185,22 @@ const QoutesDetails = (props) => {
 
   useEffect(()=>{
 
-    console.log('Current Lat : ', CurrentMove.pickup_latitude)
+    console.log('Current Lat : ', CurrentMove[0].pickup_latitude)
     GetMove(CurrentMoveId)
 
   },[])
 
  let  _mapReady = () => {
 
-    if(CurrentMove.pickup_description == '' && CurrentMove.delivery_description == '') {
-      animateMap(userData[0].current_latitude, userData[0].current_longitude)
+    if(CurrentMove[0].pickup_description == '' && CurrentMove[0].delivery_description == '') {
+      animateMap(CurrentData[0].current_latitude, CurrentData[0].current_longitude)
     }
-    else if(CurrentMove.pickup_description != '' && CurrentMove.delivery_description == '') {
-      animateMap(CurrentMove.pickup_latitude, CurrentMove.pickup_longitude)
+    else if(CurrentMove[0].pickup_description != '' && CurrentMove[0].delivery_description == '') {
+      animateMap(CurrentMove[0].pickup_latitude, CurrentMove[0].pickup_longitude)
     }
-    else if((CurrentMove.pickup_description != '' && CurrentMove.delivery_description == '') || 
-            (CurrentMove.pickup_description == '' && CurrentMove.delivery_description != '')) {
-      animateMap(CurrentMove.delivery_latitude, CurrentMove.delivery_longitude)
+    else if((CurrentMove[0].pickup_description != '' && CurrentMove[0].delivery_description == '') || 
+            (CurrentMove[0].pickup_description == '' && CurrentMove[0].delivery_description != '')) {
+      animateMap(CurrentMove[0].delivery_latitude, CurrentMove[0].delivery_longitude)
     }
   }
 
@@ -326,8 +337,8 @@ const QoutesDetails = (props) => {
         <MapView  style={{ ...StyleSheet.absoluteFillObject }}
           ref = {mapView}
           initialRegion={{
-            longitude: userData[0].current_longitude,
-            latitude: userData[0].current_latitude,
+            longitude: CurrentData[0].current_longitude,
+            latitude: CurrentData[0].current_latitude,
             latitudeDelta: 30,
             longitudeDelta: 0.0421}}
           showsUserLocation = {true}
@@ -335,7 +346,7 @@ const QoutesDetails = (props) => {
           followsUserLocation = {true}
           onMapReady = { () => _mapReady() }
           onLayout = { () => { 
-            if(CurrentMove.delivery_description != '' && CurrentMove.pickup_description != '') {
+            if(CurrentMove[0].delivery_description != '' && CurrentMove[0].pickup_description != '') {
               
               FitToCoordinates()
               
@@ -343,27 +354,27 @@ const QoutesDetails = (props) => {
             }
           }>
 
-          {CurrentMove.pickup_description != '' &&
+          {CurrentMove[0].pickup_description != '' &&
             <MapView.Marker
-              coordinate={{latitude: CurrentMove.pickup_latitude, 
-                longitude: CurrentMove.pickup_longitude}}
+              coordinate={{latitude: CurrentMove[0].pickup_latitude, 
+                longitude: CurrentMove[0].pickup_longitude}}
               title={"Pickup"}
-              description={CurrentMove.pickup_description}
+              description={CurrentMove[0].pickup_description}
               pinColor = '#6cb6fb'
           />
           }
 
-          {CurrentMove.delivery_description  != '' &&
+          {CurrentMove[0].delivery_description  != '' &&
             <MapView.Marker
-              coordinate={{latitude: CurrentMove.delivery_latitude, 
-                longitude: CurrentMove.delivery_longitude}}
+              coordinate={{latitude: CurrentMove[0].delivery_latitude, 
+                longitude: CurrentMove[0].delivery_longitude}}
               title={"Delivery"}
-              description={CurrentMove.delivery_description}
+              description={CurrentMove[0].delivery_description}
               pinColor = '#34ea34'
           />
           }
 
-          {CurrentMove.pickup_description != '' && CurrentMove.delivery_description != '' &&
+          {CurrentMove[0].pickup_description != '' && CurrentMove[0].delivery_description != '' &&
 
 
             <MapView.Polyline 

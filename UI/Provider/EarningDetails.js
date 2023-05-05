@@ -11,7 +11,20 @@ import {Drawer} from 'native-base';
 import Sidebar from '../Common/Sidebar';
 
 
+import BlogContext from './../../BlogContext';
+import {updateStates} from './../../Redux/Functions'
+
 const EarningDetails = (props) => {
+
+
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
+
 
   const [MovesList, setMoveList] = useState([])
   let drawer=useRef(null)

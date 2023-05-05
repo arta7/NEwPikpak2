@@ -33,7 +33,13 @@ const ActiveMove = (props) => {
   const [QouteWeight, SetQouteWeight] = useState(5)
   const [RouteDistance, SetRouteDistance] = useState(121)
 
-  const { userData, setUserData } = React.useContext(BlogContext);
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
   
   
   const [moveList, setMoveList] = useState([])
@@ -136,13 +142,23 @@ const ActiveMove = (props) => {
                             ShowButtons = {false} 
                             showDetails={true}
                             MainFunction = {()=>{props.navigation.navigate('ActiveMoveControl', {move_id: item._id})
-                                                CurrentMove.move_id = item._id
-                                                CurrentMove.pickup_latitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[0])
-                                                CurrentMove.pickup_longitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[1])
-                                                CurrentMove.pickup_description = item.address_of_pickup
-                                                CurrentMove.delivery_latitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[0])
-                                                CurrentMove.delivery_longitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[1])
-                                                CurrentMove.delivery_description = item.address_of_delivery}}/>
+
+              
+                            updateCurrentMoveState(CurrentMove,setCurrentMove,item._id.toString().trim(),'on',item.address_of_delivery.toString()
+                            ,parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[0])
+                            ,parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[1]),
+                            item.address_of_pickup.toString(),parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[0]),
+                            parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[1])
+                            )
+                                                // CurrentMove.move_id = item._id
+                                                // CurrentMove.pickup_latitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[0])
+                                                // CurrentMove.pickup_longitude = parseFloat(item.gps_of_pickup.toString().replace('[', '').replace(']', '').split(',')[1])
+                                                // CurrentMove.pickup_description = item.address_of_pickup
+                                                // CurrentMove.delivery_latitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[0])
+                                                // CurrentMove.delivery_longitude = parseFloat(item.gps_of_delivery.toString().replace('[', '').replace(']', '').split(',')[1])
+                                                // CurrentMove.delivery_description = item.address_of_delivery
+                                                
+                                                }}/>
           
           </View>
 

@@ -12,16 +12,22 @@ import Toast from 'react-native-simple-toast';
 import { APIMaster } from '../../API/APIMaster';
 import axios from 'axios';
 import BlogContext from './../../BlogContext';
-import {updateStates,updateLocationState} from './../../Redux/Functions'
+import {updateLocationState, updateStates} from './../../Redux/Functions'
 
 
 
 const Splash = (props) => {
 
-  const { userData, setUserData } = React.useContext(BlogContext);
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
 
 
-  const hasLocationPermission = async () => {
+  let hasLocationPermission = async () => {
 
     if (Platform.OS === 'ios') {
       const hasPermission = await hasPermissionIOS();
@@ -33,7 +39,7 @@ const Splash = (props) => {
     }
 
     const hasPermission = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
     );
 
     if (hasPermission) {
@@ -41,7 +47,7 @@ const Splash = (props) => {
     }
 
     const status = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
     );
 
     if (status === PermissionsAndroid.RESULTS.GRANTED) {
@@ -75,11 +81,11 @@ const Splash = (props) => {
       
           // LocationData.current_accuracy = position.coords.accuracy;
 
+          updateLocationState(CurrentData,setCurrentData,position.coords.latitude,position.coords.longitude,position.coords.accuracy)
 
-          updateLocationState(userData,setUserData,position.coords.latitude,position.coords.longitude,position.coords.accuracy)
 
 
-          console.log('Lat: ', userData[0].current_latitude, '  Long: ', userData[0].current_longitude);
+          console.log('Lat: ', CurrentData[0].current_latitude, '  Long: ', CurrentData[0].current_longitude);
       
         },
         (error) => {
@@ -99,7 +105,7 @@ const Splash = (props) => {
     let Username =  await AsyncStorage.getItem("username")
     let Role = await AsyncStorage.getItem("role")
    let InlineStatus = await AsyncStorage.getItem("InlineStatus")
-    console.log('User Id is : ', userData[0].user_id)
+    // console.log('User Id is : ', userData[0].user_id)
 
    if(InlineStatus != null && InlineStatus !='')
    {
@@ -111,10 +117,15 @@ const Splash = (props) => {
 
        console.log('test async')
        updateStates(userData,setUserData,User_Id.toString(),Username.toString(),null,null,null,null,null,Role.toString())
-      // LoginData.user_id = User_Id.toString();
-      // LoginData.username = Username.toString()
-      // LoginData.role = Role.toString()
-     
+    
+       if(User_Id != null && User_Id != '') 
+       {  
+         CheckUserActive(User_Id,null,null)
+       }
+       else 
+       {
+           props.navigation.replace('SignUpIn')
+       }
 
     }
   }
@@ -166,8 +177,8 @@ const Splash = (props) => {
 
     axios.post(APIMaster.URL + APIMaster.User.activation,params, axiosConfig)
     .then((response)=> {
-      console.log('response.data : ',response)
-     // Toast.show(response.data.message)
+      // console.log('response.data : ',response.data.message,response.data.status)
+    //  Toast.show(response.data.message)
       if(response.data.status == 1)
       {
         if(response.data.message == 'User Is Active')
@@ -179,6 +190,12 @@ const Splash = (props) => {
           props.navigation.replace('SignUp')
           props.navigation.navigate('ActiveAccount')
         }
+      }
+      else if(response.data.message == 'User is not exist')
+      {
+        Toast.show(response.data.message)
+        props.navigation.replace('SignUpIn')
+        
       }
       else
       {
@@ -217,7 +234,7 @@ const Splash = (props) => {
         {
         props.navigation.replace('Home')
         
-        LoginData.InlineStatus=-1;
+        // LoginData.InlineStatus=-1;
         updateStates(userData,setUserData,null,null,null,null,null,null,null,null,null,-1)
         }
         }
@@ -251,11 +268,11 @@ const Splash = (props) => {
 
     getUserData()
 
-    setTimeout(() => {
+    // setTimeout(() => {
 
-      CallNextScreen()
+    //   CallNextScreen()
 
-    }, 1000);
+    // }, 1000);
 
  
     

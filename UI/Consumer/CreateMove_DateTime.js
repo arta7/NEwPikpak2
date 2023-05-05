@@ -14,7 +14,8 @@ import { EditMoveData, MoveData } from '../../Redux/MoveData';
 import Toast from 'react-native-simple-toast';
 import moment from 'moment';
 
-
+import BlogContext from './../../BlogContext';
+import {updateEditMoveDataState, updateMoveState, updateStates} from './../../Redux/Functions'
 
 const CreateMove_DateTime = (props) => {
 
@@ -26,8 +27,20 @@ const CreateMove_DateTime = (props) => {
   const [Minute, SetMinute] = useState(0)
   const [DisplayTime, setDisplayTime] = useState('')
 
+
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
+
+
+
   const minDate = new Date()
-  const [selectedDate, setSelectedDate] = useState(EditMoveData.date_of_pickup == '' ? new Date(1986, 9, 30) : new Date(EditMoveData.date_of_pickup.substring(0, 4), EditMoveData.date_of_pickup.substring(5, 7) - 1, EditMoveData.date_of_pickup.substring(8, 10)))
+  const [selectedDate, setSelectedDate] = useState(EditMoveData[0].date_of_pickup == '' ? new Date(1986, 9, 30) : new Date(EditMoveData[0].date_of_pickup.substring(0, 4),
+   EditMoveData[0].date_of_pickup.substring(5, 7) - 1, EditMoveData[0].date_of_pickup.substring(8, 10)))
   let sdate
 
   const CalenPicker = React.useRef(null)
@@ -57,22 +70,22 @@ const CreateMove_DateTime = (props) => {
 
    // if(props.navigation.getParam('_edit') == true)
     {
-      console.log('date: ', EditMoveData.date_of_pickup)
-      console.log('Hour: ', EditMoveData.date_of_pickup.substring(0, 4))
-      console.log('Min: ', EditMoveData.date_of_pickup.substring(5, 7))
-      console.log('Hour: ', EditMoveData.date_of_pickup.substring(8, 10))
+      console.log('date: ', EditMoveData[0].date_of_pickup)
+      console.log('Hour: ', EditMoveData[0].date_of_pickup.substring(0, 4))
+      console.log('Min: ', EditMoveData[0].date_of_pickup.substring(5, 7))
+      console.log('Hour: ', EditMoveData[0].date_of_pickup.substring(8, 10))
 
       // CalenPicker.current.handleOnPressDay(2021,11,18)
-      let yyyy = Number(EditMoveData.date_of_pickup.substring(0, 4))
-      let mm = Number(EditMoveData.date_of_pickup.substring(5, 7))
-      let dd = Number(EditMoveData.date_of_pickup.substring(8, 10))
+      let yyyy = Number(EditMoveData[0].date_of_pickup.substring(0, 4))
+      let mm = Number(EditMoveData[0].date_of_pickup.substring(5, 7))
+      let dd = Number(EditMoveData[0].date_of_pickup.substring(8, 10))
 
       sdate = new Date(yyyy, mm, dd)
     
-      setDisplayTime(EditMoveData.time_of_pickup)
+      setDisplayTime(EditMoveData[0].time_of_pickup)
       
-      GetCustomTime(EditMoveData.time_of_pickup)
-      var date1 = moment(EditMoveData.date_of_pickup);
+      GetCustomTime(EditMoveData[0].time_of_pickup)
+      var date1 = moment(EditMoveData[0].date_of_pickup);
       console.log('date1: ', date1,sdate)
       onDateChange2(date1)
       // if(EditMoveData.date_of_pickup!='')
@@ -206,16 +219,23 @@ const CreateMove_DateTime = (props) => {
 
   let DataValidation=()=>{
    
-    MoveData.time_of_pickup = DisplayTime
+    // MoveData.time_of_pickup = DisplayTime
+
+      updateMoveState(MoveData,setMoveData,null,null,null,null,null,null,null,null,null,null,null,null,null,null,DisplayTime)
+
+
     console.log('Time: ', DisplayTime)
     if(props.navigation.getParam('_edit') == true)
     {
-      console.log('Time: EditMoveData.date_of_pickup.toString()', EditMoveData.date_of_pickup)
-      if(EditMoveData.date_of_pickup != 'undefined-NaN-undefined')
+      console.log('Time: EditMoveData.date_of_pickup.toString()', EditMoveData[0].date_of_pickup)
+      if(EditMoveData[0].date_of_pickup != 'undefined-NaN-undefined')
       {
-      if(EditMoveData.date_of_pickup >= getCurrentDate())
+      if(EditMoveData[0].date_of_pickup >= getCurrentDate())
       {
-      EditMoveData.time_of_pickup = DisplayTime
+      // EditMoveData.time_of_pickup = DisplayTime
+
+          updateEditMoveDataState(EditMoveData,setEditMoveData,null,null,null,null,null,null,DisplayTime)
+
       console.log('Time: SelectedStartDate', SelectedStartDate)
       // console.log('MDate: ', MoveData.date_of_pickup)
       if(SelectedStartDate._i.year != undefined)
@@ -223,13 +243,13 @@ const CreateMove_DateTime = (props) => {
         EditMoveData.date_of_pickup = SelectedStartDate._i.year + '-' +
         padLeadingZeros(SelectedStartDate._i.month + 1, 2) + '-' +
         padLeadingZeros(SelectedStartDate._i.day, 2)
-console.log('Date EditMoveData.date_of_pickup : ',SelectedStartDate._i.year , EditMoveData.date_of_pickup)
+console.log('Date EditMoveData.date_of_pickup : ',SelectedStartDate._i.year , EditMoveData[0].date_of_pickup)
     
-    props.navigation.push('CreateMove_Image', { _edit: true, _image_list: EditMoveData.move_images}) 
+    props.navigation.push('CreateMove_Image', { _edit: true, _image_list: EditMoveData[0].move_images}) 
       }
-      else if (EditMoveData.date_of_pickup!='')
+      else if (EditMoveData[0].date_of_pickup!='')
       {
-         props.navigation.push('CreateMove_Image', { _edit: true, _image_list: EditMoveData.move_images})
+         props.navigation.push('CreateMove_Image', { _edit: true, _image_list: EditMoveData[0].move_images})
        
       }
       else
@@ -240,18 +260,24 @@ console.log('Date EditMoveData.date_of_pickup : ',SelectedStartDate._i.year , Ed
     }
     else  if(SelectedStartDate != null)
     {
-    EditMoveData.time_of_pickup = DisplayTime
+    // EditMoveData.time_of_pickup = DisplayTime
+    updateEditMoveDataState(EditMoveData,setEditMoveData,null,null,null,null,null,null,DisplayTime)
     
     // console.log('MDate: ', MoveData.date_of_pickup)
     if(SelectedStartDate != null)
     {
-      EditMoveData.date_of_pickup = SelectedStartDate._i.year + '-' +
-      padLeadingZeros(SelectedStartDate._i.month + 1, 2) + '-' +
-      padLeadingZeros(SelectedStartDate._i.day, 2)
-console.log('Date: ', SelectedStartDate._i.year + '-' +
+//       EditMoveData.date_of_pickup = SelectedStartDate._i.year + '-' +
+//       padLeadingZeros(SelectedStartDate._i.month + 1, 2) + '-' +
+//       padLeadingZeros(SelectedStartDate._i.day, 2)
+// console.log('Date: ', SelectedStartDate._i.year + '-' +
+//   padLeadingZeros(SelectedStartDate._i.month + 1, 2) + '-' +
+//   padLeadingZeros(SelectedStartDate._i.day, 2))
+//   props.navigation.push('CreateMove_Image', { _edit: true, _image_list: EditMoveData.move_images}) 
+
+
+  updateEditMoveDataState(EditMoveData,setEditMoveData,null,null,null,null,null,SelectedStartDate._i.year + '-' +
   padLeadingZeros(SelectedStartDate._i.month + 1, 2) + '-' +
   padLeadingZeros(SelectedStartDate._i.day, 2))
-  props.navigation.push('CreateMove_Image', { _edit: true, _image_list: EditMoveData.move_images}) 
     }
     else
     {
@@ -266,19 +292,25 @@ console.log('Date: ', SelectedStartDate._i.year + '-' +
   else
   {
     console.log('testyyyy',SelectedStartDate)
-    EditMoveData.time_of_pickup = DisplayTime
+    // EditMoveData.time_of_pickup = DisplayTime
+
+    updateEditMoveDataState(EditMoveData,setEditMoveData,null,null,null,null,null,null,DisplayTime)
     
     // console.log('MDate: ', MoveData.date_of_pickup)
     if(SelectedStartDate != null && SelectedStartDate.toString() != 'Invalid date')
     {
-      EditMoveData.date_of_pickup = SelectedStartDate._i.year + '-' +
-      padLeadingZeros(SelectedStartDate._i.month + 1, 2) + '-' +
-      padLeadingZeros(SelectedStartDate._i.day, 2)
-console.log('Date: ', SelectedStartDate._i.year + '-' +
-  padLeadingZeros(SelectedStartDate._i.month + 1, 2) + '-' +
-  padLeadingZeros(SelectedStartDate._i.day, 2))
-  console.log(' EditMoveData.date_of_pickup', EditMoveData.date_of_pickup)
-  props.navigation.push('CreateMove_Image', { _edit: true, _image_list: EditMoveData.move_images}) 
+//       EditMoveData.date_of_pickup = SelectedStartDate._i.year + '-' +
+//       padLeadingZeros(SelectedStartDate._i.month + 1, 2) + '-' +
+//       padLeadingZeros(SelectedStartDate._i.day, 2)
+// console.log('Date: ', SelectedStartDate._i.year + '-' +
+//   padLeadingZeros(SelectedStartDate._i.month + 1, 2) + '-' +
+//   padLeadingZeros(SelectedStartDate._i.day, 2))
+//   console.log(' EditMoveData.date_of_pickup', EditMoveData.date_of_pickup)
+//   props.navigation.push('CreateMove_Image', { _edit: true, _image_list: EditMoveData.move_images}) 
+
+      updateEditMoveDataState(EditMoveData,setEditMoveData,null,null,null,null,null,SelectedStartDate._i.year + '-' +
+        padLeadingZeros(SelectedStartDate._i.month + 1, 2) + '-' +
+        padLeadingZeros(SelectedStartDate._i.day, 2))
     }
     else
     {
@@ -290,13 +322,21 @@ console.log('Date: ', SelectedStartDate._i.year + '-' +
     {
       if(SelectedStartDate != null)
       {
-        MoveData.date_of_pickup = SelectedStartDate._i.year + '-' +
-        padLeadingZeros(SelectedStartDate._i.month + 1, 2) + '-' +
-        padLeadingZeros(SelectedStartDate._i.day, 2)
-console.log('Date: ', SelectedStartDate._i.year + '-' +
+
+
+        // MoveData.date_of_pickup = SelectedStartDate._i.year + '-' +
+        // padLeadingZeros(SelectedStartDate._i.month + 1, 2) + '-' +
+        // padLeadingZeros(SelectedStartDate._i.day, 2)
+// console.log('Date: ', SelectedStartDate._i.year + '-' +
+//     padLeadingZeros(SelectedStartDate._i.month + 1, 2) + '-' +
+//     padLeadingZeros(SelectedStartDate._i.day, 2))
+//     props.navigation.push('CreateMove_Image', { _edit: false, _image_list: EditMoveData.move_images})
+
+    updateMoveState(MoveData,setMoveData,null,null,null,null,null,null,null,null,null,null,null,null,null,SelectedStartDate._i.year + '-' +
     padLeadingZeros(SelectedStartDate._i.month + 1, 2) + '-' +
     padLeadingZeros(SelectedStartDate._i.day, 2))
-    props.navigation.push('CreateMove_Image', { _edit: false, _image_list: EditMoveData.move_images})
+
+
       }
       else
       {

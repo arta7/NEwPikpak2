@@ -24,7 +24,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import BlogContext from './../../BlogContext';
 
-import {updateStates} from './../../Redux/Functions'
+import {updateEditMoveDataState, updateMoveState, updateStates} from './../../Redux/Functions'
 
 
 let selectedImageId = 0
@@ -40,7 +40,13 @@ const [Description, SetDescription] = useState('')
 const [SelectImageVisible, setSelectImageVisible] = useState(false)
 const [SelectHelperVisible, setSelectHelperVisible] = useState(false)
 
-const { userData, setUserData } = React.useContext(BlogContext);
+const { userData,setUserData,CurrentData,setCurrentData,
+  MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+  MoveData,setMoveData,
+  EditMoveData,setEditMoveData,
+  CurrentMove,setCurrentMove,
+  PDData,setPDData,
+  VDData,setVDData } = React.useContext(BlogContext);
 
 const [HelperState, setHelperState] = useState([false, false, false, false, false])
 const [HelperTitle, setHelperTitle] = useState(['Driver Only', 'Driver + One Helper', 'Driver + Two Helpers', 'Driver + Three Helpers', 'Driver + Four Helpers'])
@@ -337,7 +343,7 @@ let SetMoveData = async(_address_of_pickup,
          if(response.data.status == 1)
          {
           
-           Add_To_History(MoveData.address_of_delivery, MoveData.delivery_place_id)
+           Add_To_History(MoveData[0].address_of_delivery, MoveData[0].delivery_place_id)
 
            props.navigation.replace('MovesControl')
          }
@@ -378,7 +384,7 @@ setLoader_Visible(true)
 
  let param = {
     //  user_id : LoginData.user_id,
-      move_id: EditMoveData.move_id,
+      move_id: EditMoveData[0].move_id,
       address_of_pickup : _address_of_pickup,
       gps_of_pickup : _gps_of_pickup,
       address_of_delivery : _address_of_delivery,
@@ -409,7 +415,7 @@ Toast.show(response.data.message)
 if(response.data.status == 1)
 {
 
-Add_To_History(EditMoveData.address_of_delivery, EditMoveData.delivery_place_id)
+Add_To_History(EditMoveData[0].address_of_delivery, EditMoveData[0].delivery_place_id)
 
 props.navigation.replace('MovesControl')
 }
@@ -435,12 +441,17 @@ console.log('ERror Caatch',err)
 
 let DataValidation=()=>{
 
-  MoveData.weight = Weight
-  MoveData.no_of_helpers = SelectedItem-1
-  // console.log(img.uri)
-  // console.log(img, '====', imgFN)
-  MoveData.move_images = img
-  MoveData.description = Description
+  // MoveData.weight = Weight
+  // MoveData.no_of_helpers = SelectedItem-1
+  // // console.log(img.uri)
+  // // console.log(img, '====', imgFN)
+  // MoveData.move_images = img
+  // MoveData.description = Description
+
+   updateMoveState(MoveData,setMoveData,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,img,Weight,SelectedItem-1,Description)
+
+
+
   if(ImageList.filter(item => item.name != 0).length == 0)
   {
     Toast.show('Please Fill at Least One Image.') 
@@ -451,43 +462,46 @@ let DataValidation=()=>{
     {
 
 
-      EditMoveData.description = Description
-      EditMoveData.no_of_helpers = SelectedItem-1
-      EditMoveData.weight = Weight
+      // EditMoveData.description = Description
+      // EditMoveData.no_of_helpers = SelectedItem-1
+      // EditMoveData.weight = Weight
 
-      UpdateMove(EditMoveData.address_of_pickup,
-        EditMoveData.gps_of_pickup,
-        EditMoveData.address_of_delivery,
-        EditMoveData.gps_of_delivery,
-        EditMoveData.move_type_id,
-        EditMoveData.date_of_pickup,
-        EditMoveData.time_of_pickup,
-        EditMoveData.weight,
-        EditMoveData.no_of_helpers,
-        EditMoveData.description)
+
+      updateEditMoveDataState(EditMoveData,setEditMoveData,null,null,null,null,null,null,null,null,Weight,SelectedItem-1,Description)
+
+      UpdateMove(EditMoveData[0].address_of_pickup,
+        EditMoveData[0].gps_of_pickup,
+        EditMoveData[0].address_of_delivery,
+        EditMoveData[0].gps_of_delivery,
+        EditMoveData[0].move_type_id,
+        EditMoveData[0].date_of_pickup,
+        EditMoveData[0].time_of_pickup,
+        EditMoveData[0].weight,
+        EditMoveData[0].no_of_helpers,
+        EditMoveData[0].description)
        
     }
     else
     {
-  SetMoveData(MoveData.address_of_pickup,
-              MoveData.gps_of_pickup,
-              MoveData.address_of_delivery,
-              MoveData.gps_of_delivery,
-              MoveData.move_type_id,
-              MoveData.pickup_unit_number,
-              MoveData.pickup_stairs,
-              MoveData.pickup_elevator_building,
-              MoveData.pickup_parking_info,
-              MoveData.delivery_unit_Number,
-              MoveData.delivery_stairs,
-              MoveData.delivery_elevator_building,
-              MoveData.delivery_parking_info,
-              MoveData.date_of_pickup,
-              MoveData.time_of_pickup,
-              MoveData.move_images,
-              MoveData.weight,
-              MoveData.no_of_helpers,
-              MoveData.description)
+  SetMoveData(MoveData[0].address_of_pickup,
+              MoveData[0].gps_of_pickup,
+              MoveData[0].address_of_delivery,
+              MoveData[0].gps_of_delivery,
+              MoveData[0].move_type_id,
+              MoveData[0].pickup_unit_number,
+              MoveData[0].pickup_stairs,
+              MoveData[0].pickup_elevator_building,
+              MoveData[0].pickup_parking_info,
+              MoveData[0].delivery_unit_Number,
+              MoveData[0].delivery_stairs,
+              MoveData[0].delivery_elevator_building,
+              MoveData[0].delivery_parking_info,
+              MoveData[0].date_of_pickup,
+              MoveData[0].time_of_pickup,
+              MoveData[0].move_images,
+              MoveData[0].weight,
+              MoveData[0].no_of_helpers,
+              MoveData[0].description)
            
   }
 
@@ -537,17 +551,17 @@ useEffect(()=>{
   if(props.navigation.getParam('_edit') == true)
   {
     // setImageList([])
-    for(let i=0;i<EditMoveData.move_images.length;i++)
+    for(let i=0;i<EditMoveData[0].move_images.length;i++)
     {
-      ImageList.push({name:(i+1).toString() , value: EditMoveData.move_images[i].file_name,state:1})
+      ImageList.push({name:(i+1).toString() , value: EditMoveData[0].move_images[i].file_name,state:1})
     }
-    SetWeight(EditMoveData.weight.toString())
-    SetDescription( EditMoveData.description)
-    SetNumOfHelper(HelperTitle[EditMoveData.no_of_helpers])
-    setSelectedItem(EditMoveData.no_of_helpers)
+    SetWeight(EditMoveData[0].weight.toString())
+    SetDescription( EditMoveData[0].description)
+    SetNumOfHelper(HelperTitle[EditMoveData[0].no_of_helpers])
+    setSelectedItem(EditMoveData[0].no_of_helpers)
    
     
-    console.log('List Len first run : ', EditMoveData.weight)
+    console.log('List Len first run : ', EditMoveData[0].weight)
   }
 
 

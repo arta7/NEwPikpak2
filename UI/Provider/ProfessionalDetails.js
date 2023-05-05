@@ -20,7 +20,23 @@ import Modal from 'react-native-modal';
 import Loading_Data from '../../Components/LoadingData';
 import Toast from 'react-native-simple-toast';
 
+
+import BlogContext from './../../BlogContext';
+import {updatePDDataSatte, updateStates} from './../../Redux/Functions'
+
 const ProfessionalDetails = (props) => {
+
+
+
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
+
+
 
 const [Weight, SetWeight] = useState('')
 const [NumOfHelper, SetNumOfHelper] = useState('')
@@ -267,7 +283,9 @@ let DataValidation=()=>{
   }
   else
   {
-    PDData.organization_type = OrganizationType_Id
+    // PDData.organization_type = OrganizationType_Id
+
+    updatePDDataSatte(PDData,setPDData,OrganizationType_Id)
 
     if(Vehicle_Id == '')
     {
@@ -275,7 +293,8 @@ let DataValidation=()=>{
     }
     else
     {
-      PDData.vehicle_id = Vehicle_Id
+      // PDData.vehicle_id = Vehicle_Id
+      updatePDDataSatte(PDData,setPDData,null,Vehicle_Id)
 
       if(Make_Id == '')
       {
@@ -283,7 +302,8 @@ let DataValidation=()=>{
       }
       else 
       {
-        PDData.make_id = Make_Id
+        // PDData.make_id = Make_Id
+        updatePDDataSatte(PDData,setPDData,null,null,Make_Id)
 
         if(Model_Id == '')
         {
@@ -291,7 +311,8 @@ let DataValidation=()=>{
         }
         else 
         {
-          PDData.model_id = Model_Id
+          // PDData.model_id = Model_Id
+          updatePDDataSatte(PDData,setPDData,null,null,null,Model_Id)
 
           if(_Year == '')
           {
@@ -299,7 +320,8 @@ let DataValidation=()=>{
           }
           else 
           {
-            PDData._year = _Year.toString()
+            // PDData._year = _Year.toString()
+            updatePDDataSatte(PDData,setPDData,null,null,null,null,_Year.toString())
 
             if(Color_Id == '')
             {
@@ -307,7 +329,8 @@ let DataValidation=()=>{
             }
             else 
             {
-              PDData.color_id = Color_Id
+              // PDData.color_id = Color_Id
+              updatePDDataSatte(PDData,setPDData,null,null,null,null,null,Color_Id)
 
               if(_Weight == '')
               {
@@ -315,7 +338,9 @@ let DataValidation=()=>{
               }
               else 
               {
-                PDData.max_weight = _Weight
+                // PDData.max_weight = _Weight
+                updatePDDataSatte(PDData,setPDData,null,null,null,null,null,null,null,null,
+                  null,null,null,null,null,null,null,null,null,null,null,null,_Weight)
 
                 if(_Length == '')
                 {
@@ -323,7 +348,9 @@ let DataValidation=()=>{
                 }
                 else
                 {
-                  PDData.bed_length = _Length
+                  // PDData.bed_length = _Length
+                  updatePDDataSatte(PDData,setPDData,null,null,null,null,null,null,null,null,
+                    null,null,null,null,null,null,null,null,null,null,null,null,null,_Length)
 
                   props.navigation.navigate('VehicleProperties')
                 }

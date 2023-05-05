@@ -22,24 +22,28 @@ import SelectLocation from '../Common/SelectLocation';
 import Polyline from '@mapbox/polyline';
 import { GoogleMaps } from '../../Redux/GoogleMapsData';
 
-
 import BlogContext from './../../BlogContext';
-import {updateStates} from './../../Redux/Functions'
-
-
-
+import {updateEditMoveDataState, updateMoveLocationState, updateMoveState, updateStates} from './../../Redux/Functions'
 
 
 const App = (props) => {
 
+const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
 
-  const [SrcLocation, setSrcLocation] = useState(MoveLocationsData.pickup_description)
-  const [SrcLatitude, setSrcLatitude] = useState(MoveLocationsData.pickup_latitude)
+
+  const [SrcLocation, setSrcLocation] = useState(MoveLocationsData[0].pickup_description)
+  const [SrcLatitude, setSrcLatitude] = useState(MoveLocationsData[0].pickup_latitude)
   const [SrcLongitude, setSrcLongitude] = useState(MoveLocationsData.pickup_longitude)
   const [IsSetSrcLoc, setIsSetSrcLoc] = useState(false)
-  const [DestLocation, setDestLocation] = useState(MoveLocationsData.delivery_description)
-  const [DestLatitude, setDestLatitude] = useState(MoveLocationsData.delivery_latitude)
-  const [DestLongitude, setDestLongitude] = useState(MoveLocationsData.delivery_longitude)
+  const [DestLocation, setDestLocation] = useState(MoveLocationsData[0].delivery_description)
+  const [DestLatitude, setDestLatitude] = useState(MoveLocationsData[0].delivery_latitude)
+  const [DestLongitude, setDestLongitude] = useState(MoveLocationsData[0].delivery_longitude)
   const [IsSetDestLoc, setIsSetDestLoc] = useState(false)
   const [MoveTypeVisible, setMoveTypeVisible] = useState(false)
   const [SelectedMoveTypeId, setSelectedMoveTypeId] =useState(0)
@@ -48,8 +52,7 @@ const App = (props) => {
   const [coords, setcoords] = useState([])
 
 
-  const { userData, setUserData } = React.useContext(BlogContext);
-
+  
 
   // const [coords_edit, setcoords_edit] = useState([])
 
@@ -70,7 +73,10 @@ const App = (props) => {
     
     console.log('Get methode called')
     console.log('move id : ',_move_id)
-    EditMoveData.move_id = move_id;
+    // EditMoveData.move_id = move_id;
+
+    updateEditMoveDataState(EditMoveData,setEditMoveData,null,null,null,null,null,null,null,null,null,null,null,null,null,move_id)
+
     var axiosConfig = {
       headers:{
         Accept : 'application/json',
@@ -90,45 +96,56 @@ const App = (props) => {
             
             if(response.status == 200)
                 {
-                  EditMoveData.address_of_pickup = response.data.move.address_of_pickup
-                  EditMoveData.gps_of_pickup = response.data.move.gps_of_pickup
+                  // EditMoveData.address_of_pickup = response.data.move.address_of_pickup
+                  // EditMoveData.gps_of_pickup = response.data.move.gps_of_pickup
            
 
-                  EditMoveData.address_of_delivery = response.data.move.address_of_delivery
-                  EditMoveData.gps_of_delivery = response.data.move.gps_of_delivery
+                  // EditMoveData.address_of_delivery = response.data.move.address_of_delivery
+                  // EditMoveData.gps_of_delivery = response.data.move.gps_of_delivery
 
-                  EditMoveData.address_of_pickup = response.data.move.address_of_pickup
-                  EditMoveData.gps_of_pickup = response.data.move.gps_of_pickup
+                  // EditMoveData.address_of_pickup = response.data.move.address_of_pickup
+                  // EditMoveData.gps_of_pickup = response.data.move.gps_of_pickup
                   setSrcLocation(response.data.move.address_of_pickup)
                   setSrcLatitude(response.data.move.gps_of_pickup[0])
                   setSrcLongitude(response.data.move.gps_of_pickup[1])
 
-                  EditMoveData.address_of_delivery = response.data.move.address_of_delivery
-                  EditMoveData.gps_of_delivery = response.data.move.gps_of_delivery
+                  // EditMoveData.address_of_delivery = response.data.move.address_of_delivery
+                  // EditMoveData.gps_of_delivery = response.data.move.gps_of_delivery
+
+
+
+                    updateEditMoveDataState(EditMoveData,setEditMoveData,response.data.move.address_of_pickup
+                      ,response.data.move.gps_of_pickup,response.data.move.address_of_delivery,response.data.move.gps_of_delivery
+                      ,response.data.move.move_type_id.toString(),response.data.move.date_of_pickup,response.data.move.time_of_pickup,response.data.move.move_files,
+                      response.data.move.weight,response.data.move.no_of_helpers,response.data.move.description )
+
+
+
+
                   setDestLocation(response.data.move.address_of_delivery)
                   setDestLatitude(response.data.move.gps_of_delivery[0])
                   setDestLongitude(response.data.move.gps_of_delivery[1])
 
                 
 
-                  EditMoveData.move_type_id = response.data.move.move_type._id.toString()
+                  // EditMoveData.move_type_id = response.data.move.move_type._id.toString()
                   console.log('(EditMoveData. EditMoveData.move_type_id) : ', response.data.move.move_type.name)
                   setSelectedMoveTypeId(response.data.move.move_type._id)
                   setSelectedMoveTypeTitle(response.data.move.move_type.name)
 
-                  EditMoveData.date_of_pickup = response.data.move.date_of_pickup
-                  EditMoveData.time_of_pickup = response.data.move.time_of_pickup
+                  // EditMoveData.date_of_pickup = response.data.move.date_of_pickup
+                  // EditMoveData.time_of_pickup = response.data.move.time_of_pickup
 
-                  EditMoveData.move_images = response.data.move.move_files
+                  // EditMoveData.move_images = response.data.move.move_files
 
-                  EditMoveData.weight = response.data.move.weight
-                  EditMoveData.no_of_helpers = response.data.move.no_of_helpers
-                  EditMoveData.description = response.data.move.description
+                  // EditMoveData.weight = response.data.move.weight
+                  // EditMoveData.no_of_helpers = response.data.move.no_of_helpers
+                  // EditMoveData.description = response.data.move.description
                   
                   getDirections(pickup_coords[0] + " , " + pickup_coords[1] ,
                                 delivery_coords[0] + " , " + delivery_coords[1])
                     
-                                console.log('test ok',EditMoveData.weight)
+                                // console.log('test ok',EditMoveData.weight)
                   
                 }
        
@@ -202,16 +219,24 @@ const App = (props) => {
     }
     else
     {
-      MoveData.address_of_pickup = SrcLocation,
-      MoveData.gps_of_pickup = "[" + SrcLatitude.toString() + " , " + SrcLongitude.toString() + "]",
-      MoveData.address_of_delivery = DestLocation,
-      MoveData.gps_of_delivery = "[" + DestLatitude.toString() + " , " + DestLongitude.toString() + "]",
-      MoveData.move_type_id = SelectedMoveTypeId
+      // MoveData.address_of_pickup = SrcLocation,
+      // MoveData.gps_of_pickup = "[" + SrcLatitude.toString() + " , " + SrcLongitude.toString() + "]",
+      // MoveData.address_of_delivery = DestLocation,
+      // MoveData.gps_of_delivery = "[" + DestLatitude.toString() + " , " + DestLongitude.toString() + "]",
+      // MoveData.move_type_id = SelectedMoveTypeId
+
+
+       updateMoveState(MoveData,setMoveData,SrcLocation,"[" + SrcLatitude.toString() + " , " + SrcLongitude.toString() + "]",DestLocation
+       ,"[" + DestLatitude.toString() + " , " + DestLongitude.toString() + "]",SelectedMoveTypeId)
+
+
 
       //...............................................
       if(move_id != '')
       {
-        EditMoveData.move_type_id = SelectedMoveTypeId
+        // EditMoveData.move_type_id = SelectedMoveTypeId
+
+        updateEditMoveDataState(EditMoveData,setEditMoveData,null,null,null,null,SelectedMoveTypeId)
         props.navigation.push('CreateMove_DateTime', { _edit: true })
       }
       else
@@ -230,17 +255,17 @@ const App = (props) => {
   }
 
   let componentDidMount=()=> {
-   if(MoveLocationsData.pickup_description != '' && MoveLocationsData.delivery_description != '')
+   if(MoveLocationsData[0].pickup_description != '' && MoveLocationsData[0].delivery_description != '')
    {
-    getDirections(MoveLocationsData.pickup_latitude.toString() + " , " + MoveLocationsData.pickup_longitude.toString() ,
-                  MoveLocationsData.delivery_latitude.toString() + " , " + MoveLocationsData.delivery_longitude.toString())
+    getDirections(MoveLocationsData[0].pickup_latitude.toString() + " , " + MoveLocationsData[0].pickup_longitude.toString() ,
+    MoveLocationsData[0].delivery_latitude.toString() + " , " + MoveLocationsData[0].delivery_longitude.toString())
    }
-   console.log(MoveLocationsData.pickup_latitude.toString() + " , " + MoveLocationsData.pickup_longitude.toString() ,
-               MoveLocationsData.delivery_latitude.toString() + " , " + MoveLocationsData.delivery_longitude.toString())
+   console.log(MoveLocationsData[0].pickup_latitude.toString() + " , " + MoveLocationsData[0].pickup_longitude.toString() ,
+   MoveLocationsData[0].delivery_latitude.toString() + " , " + MoveLocationsData[0].delivery_longitude.toString())
    
    
-   console.log(DefaultLocationData.default_latitude)
-   console.log(DefaultLocationData.default_longitude)
+  //  console.log(DefaultLocationData.default_latitude)
+  //  console.log(DefaultLocationData.default_longitude)
   }
 
   
@@ -264,7 +289,12 @@ const App = (props) => {
                     longitude : point[1]
                 }
             })
-            MoveLocationsData.distance = Number(Number(respJson.routes[0].legs[0].distance.value) * 0.000621371).toFixed(1)
+
+            updateMoveLocationState(MoveLocationsData,setMoveLocationsData,null,null,null,null,null,null,Number(Number(respJson.routes[0].legs[0].distance.value) * 0.000621371).toFixed(1))
+           // MoveLocationsData.distance = Number(Number(respJson.routes[0].legs[0].distance.value) * 0.000621371).toFixed(1)
+
+            
+
             setcoords(coords)
             return coords
         } catch(error) {
@@ -278,7 +308,7 @@ const App = (props) => {
     const animateMap = (lat, lng) => {
       if(mapView.current != null)
       {
-        if(userData[0].current_latitude != 0)
+        if(CurrentData[0].current_latitude != 0)
         {
       mapView.current.animateToRegion({ 
           
@@ -295,8 +325,8 @@ const App = (props) => {
   useEffect(()=>{
     GetMoveType()
     // EditMoveData.move_id = '';
-    console.log('latitude: ', userData[0].current_latitude,
-      'longitude: ', userData[0].current_longitude,)
+    console.log('latitude: ', CurrentData[0].current_latitude,
+      'longitude: ', CurrentData[0].current_longitude,)
     console.log('Edit Move Id: ', move_id)
     console.log('Pickup : ', pickup_coords)
     console.log('Delivery: ', delivery_coords)
@@ -311,18 +341,18 @@ const App = (props) => {
 
   let  _mapReady = () => {
       console.log("map ready");
-      if(MoveLocationsData.pickup_description == '' && MoveLocationsData.delivery_description == '')
+      if(MoveLocationsData[0].pickup_description == '' && MoveLocationsData[0].delivery_description == '')
       {
-        animateMap(userData[0].current_latitude, userData[0].current_longitude)
+        animateMap(CurrentData[0].current_latitude, CurrentData[0].current_longitude)
       }
-      else if(MoveLocationsData.pickup_description != '' && MoveLocationsData.delivery_description == '')
+      else if(MoveLocationsData[0].pickup_description != '' && MoveLocationsData[0].delivery_description == '')
       {
-        animateMap(MoveLocationsData.pickup_latitude, MoveLocationsData.pickup_longitude)
+        animateMap(MoveLocationsData[0].pickup_latitude, MoveLocationsData[0].pickup_longitude)
       }
-      else if((MoveLocationsData.pickup_description != '' && MoveLocationsData.delivery_description == '') || 
-              (MoveLocationsData.pickup_description == '' && MoveLocationsData.delivery_description != ''))
+      else if((MoveLocationsData[0].pickup_description != '' && MoveLocationsData[0].delivery_description == '') || 
+              (MoveLocationsData[0].pickup_description == '' && MoveLocationsData[0].delivery_description != ''))
       {
-        animateMap(MoveLocationsData.delivery_latitude, MoveLocationsData.delivery_longitude)
+        animateMap(MoveLocationsData[0].delivery_latitude, MoveLocationsData[0].delivery_longitude)
       }
     }
 
@@ -377,8 +407,8 @@ const App = (props) => {
         <MapView  style={{ ...StyleSheet.absoluteFillObject }}
           ref = {mapView}
           initialRegion={{
-            longitude: userData[0].current_longitude,
-            latitude: userData[0].current_latitude,
+            longitude: CurrentData[0].current_longitude,
+            latitude: CurrentData[0].current_latitude,
             latitudeDelta: 30,
             longitudeDelta: 0.0421}}
           showsUserLocation = {true}
@@ -386,10 +416,10 @@ const App = (props) => {
           followsUserLocation = {true}
           onMapReady = { () => _mapReady() }
           onLayout = { () => { 
-            if(MoveLocationsData.delivery_description != '' && MoveLocationsData.pickup_description != '') {
+            if(MoveLocationsData[0].delivery_description != '' && MoveLocationsData[0].pickup_description != '') {
               mapView.current.fitToCoordinates([
-                { latitude: MoveLocationsData.pickup_latitude, longitude: MoveLocationsData.pickup_longitude }, 
-                { latitude: MoveLocationsData.delivery_latitude, longitude: MoveLocationsData.delivery_longitude }
+                { latitude: MoveLocationsData[0].pickup_latitude, longitude: MoveLocationsData[0].pickup_longitude }, 
+                { latitude: MoveLocationsData[0].delivery_latitude, longitude: MoveLocationsData[0].delivery_longitude }
                 ], {
                 edgePadding: {
                   bottom: 200,
@@ -404,27 +434,27 @@ const App = (props) => {
           }
           >
 
-        {MoveLocationsData.pickup_description != '' &&
+        {MoveLocationsData[0].pickup_description != '' &&
           <MapView.Marker
-            coordinate={{latitude: MoveLocationsData.pickup_latitude,
-            longitude: MoveLocationsData.pickup_longitude}}
+            coordinate={{latitude: MoveLocationsData[0].pickup_latitude,
+            longitude: MoveLocationsData[0].pickup_longitude}}
             title={"Pickup"}
-            description={MoveLocationsData.pickup_description}
+            description={MoveLocationsData[0].pickup_description}
             pinColor = '#6cb6fb'
          />
         }
 
-        {MoveLocationsData.delivery_description != '' &&
+        {MoveLocationsData[0].delivery_description != '' &&
           <MapView.Marker
-            coordinate={{latitude: MoveLocationsData.delivery_latitude,
-            longitude: MoveLocationsData.delivery_longitude}}
+            coordinate={{latitude: MoveLocationsData[0].delivery_latitude,
+            longitude: MoveLocationsData[0].delivery_longitude}}
             title={"Delivery"}
-            description={MoveLocationsData.delivery_description}
+            description={MoveLocationsData[0].delivery_description}
             pinColor = '#34ea34'
          />
         }
 
-        {MoveLocationsData.delivery_description != '' && MoveLocationsData.pickup_description != '' &&
+        {MoveLocationsData[0].delivery_description != '' && MoveLocationsData[0].pickup_description != '' &&
 
 
           <MapView.Polyline 
@@ -440,8 +470,8 @@ const App = (props) => {
         <MapView  style={{ ...StyleSheet.absoluteFillObject }}
           ref = {mapView}
           initialRegion={{
-            longitude: userData[0].current_longitude,
-            latitude: userData[0].current_latitude,
+            longitude: CurrentData[0].current_longitude,
+            latitude: CurrentData[0].current_latitude,
             latitudeDelta: 30,
             longitudeDelta: 0.0421}}
           showsUserLocation = {true}
@@ -449,7 +479,7 @@ const App = (props) => {
           followsUserLocation = {true}
           onMapReady = { () => _mapReady() }
           onLayout = { () => { 
-            if(EditMoveData.address_of_delivery != '' && EditMoveData.address_of_pickup != '') {
+            if(EditMoveData[0].address_of_delivery != '' && EditMoveData[0].address_of_pickup != '') {
               
               console.log('********************\n******** OK! *******\n********************\n')
               
@@ -478,27 +508,27 @@ const App = (props) => {
           }
           >
 
-        {EditMoveData.address_of_pickup != '' &&
+        {EditMoveData[0].address_of_pickup != '' &&
           <MapView.Marker
             coordinate={{latitude: Number(pickup_coords[0]), 
               longitude: Number(pickup_coords[1])}}
             title={"Pickup"}
-            description={EditMoveData.address_of_pickup}
+            description={EditMoveData[0].address_of_pickup}
             pinColor = '#6cb6fb'
          />
         }
 
-        {EditMoveData.address_of_delivery != '' &&
+        {EditMoveData[0].address_of_delivery != '' &&
           <MapView.Marker
             coordinate={{latitude: Number(delivery_coords[0]), 
               longitude: Number(delivery_coords[1])}}
             title={"Pickup"}
-            description={EditMoveData.address_of_pickup}
+            description={EditMoveData[0].address_of_pickup}
             pinColor = '#34ea34'
          />
         }
 
-        {EditMoveData.address_of_pickup != '' && EditMoveData.address_of_delivery != '' &&
+        {EditMoveData[0].address_of_pickup != '' && EditMoveData[0].address_of_delivery != '' &&
 
 
           <MapView.Polyline 

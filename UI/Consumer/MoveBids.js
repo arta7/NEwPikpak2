@@ -19,7 +19,8 @@ import { MoveLocationsData, LocationData, DefaultLocationData } from '../../Redu
 import SelectLocation from '../Common/SelectLocation';
 import { CurrentMove, MoveData } from '../../Redux/MoveData';
 
-
+import BlogContext from './../../BlogContext';
+import {updateStates} from './../../Redux/Functions'
 
 const App = (props) => {
  
@@ -27,6 +28,18 @@ const App = (props) => {
   const [MoveComment, setMoveComment] = useState('Comment ...')
   const [Loader_Visible, setLoader_Visible] = useState(false)
   const [QoutesBidsList, setQoutesBidsList] = useState([])
+
+
+
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
+
+
 
   
   let GetBidsList = (_move_id)=>{
@@ -117,7 +130,7 @@ const App = (props) => {
   
   useEffect(()=>{
 
-    GetBidsList(CurrentMove.move_id)
+    GetBidsList(CurrentMove[0].move_id)
     // setQoutesBidsList(MoveData.move_bids)
 
   }, []);

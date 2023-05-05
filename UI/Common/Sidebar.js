@@ -25,7 +25,13 @@ const App = (props) => {
 
   const [PerfessionalDetailNotApproved_Visible, setPerfessionalDetailNotApproved_Visible] = useState(false)
   const  [fileUri, setFileUri] = useState()
-  const { userData, setUserData } = React.useContext(BlogContext);
+  const { userData,setUserData,CurrentData,setCurrentData,
+    MoveLocationsData, setMoveLocationsData,DefaultLocationData,setDefaultLocationData,
+    MoveData,setMoveData,
+    EditMoveData,setEditMoveData,
+    CurrentMove,setCurrentMove,
+    PDData,setPDData,
+    VDData,setVDData } = React.useContext(BlogContext);
 
 
   // const [UserType, setUserType] = useState(false)
