@@ -1,7 +1,7 @@
 import BlogContext from './../BlogContext';
 
 
-export  function  updateStates  (userData,setUserData,itemuserid,itemusername,itempassword,itemtype,itemfacebookid,
+export async function  updateStates  (userData,setUserData,itemuserid,itemusername,itempassword,itemtype,itemfacebookid,
     itemgoogleid,itememail,itemrole,itemstatus,itemInlineStatus,itembadgeCount,itemCurrentPage)
      {
 
@@ -30,7 +30,7 @@ export  function  updateStates  (userData,setUserData,itemuserid,itemusername,it
   setUserData(newState)
 }
 
-export  function  updateLocationState(currentData,setCurrentData,itemCurrentLat,itemCurrentLong,itemCurrentac)
+export async function  updateLocationState(currentData,setCurrentData,itemCurrentLat,itemCurrentLong,itemCurrentac)
    {
 
 console.log('test location state',currentData)
@@ -49,7 +49,7 @@ setCurrentData(newState)
 
 
 
-export  function  updateMoveLocationState(MoveLocationsData,setMoveLocationsData,itemdeliverydescription,itemdeliverylatitude
+export  async function  updateMoveLocationState(MoveLocationsData,setMoveLocationsData,itemdeliverydescription,itemdeliverylatitude
   ,itemdeliverylongitude,itempickupdescription,itempickuplatitude,itempickuplongitude,itemdistance)
    {
 
@@ -72,7 +72,7 @@ setMoveLocationsData(newState)
 }
 
 
-export  function  updateDefaultLocationState(DefaultLocationData,setDefaultLocationData,itemdefaultlatitude,itemdefaultlongitude)
+export  async function  updateDefaultLocationState(DefaultLocationData,setDefaultLocationData,itemdefaultlatitude,itemdefaultlongitude)
    {
 console.log('test location state',DefaultLocationData)
 var newState = DefaultLocationData.map((item, idx) => {
@@ -90,7 +90,7 @@ setDefaultLocationData(newState)
 
 
 
-export  function  updateMoveState(MoveData,setMoveData,itemaddressofpickup,itemgpsofpickup
+export async function  updateMoveState(MoveData,setMoveData,itemaddressofpickup,itemgpsofpickup
   ,itemaddressofdelivery,itemgpsofdelivery,itemmovetypeid,itempickupunitnumber,itempickupstairs,itempickupelevatorbuilding,
   itempickupparkinginfo,itemdeliveryunitNumber,itemdeliverystairs,itemdeliveryelevatorbuilding,itemdeliveryparkinginfo,itemdateofpickup,
   itemtimeofpickup,itemmoveimages,itemweight,itemnoofhelpers,itemdescription,itemconsumervehicleid,itemmovebids,itemdeliveryplaceid
@@ -132,7 +132,7 @@ setMoveData(newState)
 
 
 
-export  function  updateEditMoveDataState(EditMoveData,setEditMoveData,itemaddressofpickup,itemgpsofpickup,
+export async function  updateEditMoveDataState(EditMoveData,setEditMoveData,itemaddressofpickup,itemgpsofpickup,
   itemaddressofdelivery,itemgpsofdelivery,itemmovetypeid,itemdateofpickup,itemtimeofpickup,itemmoveimages,
   itemweight,itemnoofhelpers,itemdescription,itemconsumervehicleid,itemmovebids,itemmoveid)
    {
@@ -192,7 +192,7 @@ setEditMoveData(newState)
 // }
 
 
-export  function  updateCurrentMoveState(CurrentMove,setCurrentMove,itemmoveid,itemprovidermovedetailsheader,itemdeliverydescription,itemdeliverylatitude,
+export async function  updateCurrentMoveState(CurrentMove,setCurrentMove,itemmoveid,itemprovidermovedetailsheader,itemdeliverydescription,itemdeliverylatitude,
   itemdeliverylongitude,itempickupdescription,itempickuplatitude,itempickuplongitude
   )
    {
@@ -219,7 +219,7 @@ setCurrentMove(newState)
 
 
 
-export  function  updatePDDataSatte(PDData,setPDData,itemorganizationtype,itemvehicleid,itemmakeid,itemmodelid,itemyear,itemcolorid,itemtowhitch,
+export async function  updatePDDataSatte(PDData,setPDData,itemorganizationtype,itemvehicleid,itemmakeid,itemmodelid,itemyear,itemcolorid,itemtowhitch,
   itemtrailer,itemliftupto,itemaddress1,itemstate,itemcity,itemzipcode,itemvehiclephoto,itemvehicleinspectionform,itemvehicleinsurance,
   itemvehicleregistration,itemtraileropen,itemequipmentid,itemmerchant,itemmaxweight,itembedlength,itemaddress2
 
@@ -263,7 +263,7 @@ setPDData(newState)
 }
 
 
-export  function  updateVDDataState(VDData,setVDData,itemvehicleid)
+export async function  updateVDDataState(VDData,setVDData,itemvehicleid)
    {
 console.log('test location state',VDData)
 var newState = VDData.map((item, idx) => {

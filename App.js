@@ -184,6 +184,8 @@ export default function App ()  {
             //   clearInterval(interval)
              
             // })
+            
+            
             const pr = realm.objects('Counting')
             // console.log('pr',pr)
             if(pr.length >0)

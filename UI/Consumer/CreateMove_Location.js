@@ -75,7 +75,8 @@ const { userData,setUserData,CurrentData,setCurrentData,
     console.log('move id : ',_move_id)
     // EditMoveData.move_id = move_id;
 
-    updateEditMoveDataState(EditMoveData,setEditMoveData,null,null,null,null,null,null,null,null,null,null,null,null,null,move_id)
+    updateEditMoveDataState(EditMoveData,setEditMoveData,null,null,null,null,null
+      ,null,null,null,null,null,null,null,null,move_id)
 
     var axiosConfig = {
       headers:{
@@ -323,6 +324,8 @@ const { userData,setUserData,CurrentData,setCurrentData,
     }
 
   useEffect(()=>{
+
+    // console.log('MoveLocationsData[0].address_of_pickup',MoveLocationsData[0]?.address_of_pickup)
     GetMoveType()
     // EditMoveData.move_id = '';
     console.log('latitude: ', CurrentData[0].current_latitude,
@@ -337,7 +340,9 @@ const { userData,setUserData,CurrentData,setCurrentData,
 
     componentDidMount();
 
-    },[])
+    
+
+    },[MoveLocationsData[0]?.pickup_description])
 
   let  _mapReady = () => {
       console.log("map ready");
@@ -382,7 +387,9 @@ const { userData,setUserData,CurrentData,setCurrentData,
                       LocTitle = {'Source Location'} LocTitleColor = {'#000'}
                       PointTitle = {'A'} Value = {SrcLocation}
                       DisableItem={move_id == '' ? false : true}
-                      ButtonFunction = {()=>{props.navigation.replace('SelectLocation',
+                      ButtonFunction = {()=>{
+                        console.log('call_id','src')
+                        props.navigation.replace('SelectLocation',
                        {call_id: 'src', screen_title: 'Pickup Address', last_location : SrcLocation,move_id:move_id})}}/>
 
         </View>
@@ -395,7 +402,8 @@ const { userData,setUserData,CurrentData,setCurrentData,
                       PointTitle = {'B'} Value = {DestLocation}
                       DisableItem={move_id == '' ? false : true}
                       ButtonFunction = {()=>{props.navigation.replace('SelectLocation',
-                       {call_id: 'dest', screen_title: 'Delivery Address', last_location : DestLocation,move_id:move_id})}}/>
+                       {call_id: 'dest', screen_title: 'Delivery Address',
+                        last_location : DestLocation,move_id:move_id})}}/>
 
         </View>          
 

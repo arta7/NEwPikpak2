@@ -124,6 +124,15 @@ let GetPlaceLatLng = async(place_id)=>{
 
         <GooglePlacesAutocomplete
           ref = {SearchBar}
+          requestUrl={{
+            useOnPlatform: 'all',
+            url:
+        'https://maps.googleapis.com/maps/api',
+            headers: {
+            'X-Android-Package': 'com.pikpak',
+            'X-Android-Cert': GoogleMaps.fingerPrint
+          }
+        }}
           placeholder='Enter Location'
           minLength={2}
           autoFocus={false}
@@ -152,9 +161,14 @@ let GetPlaceLatLng = async(place_id)=>{
                {
                  console.log('call id = ')
                  if(call_id == 'src')
-                 {MoveLocationsData[0].pickup_description = data.description}
+                //  {MoveLocationsData[0].pickup_description = data.description}
+                //  else
+                //  {MoveLocationsData[0].delivery_description = data.description}
+                updateMoveLocationState(MoveLocationsData,setMoveLocationsData,
+                  null,null,null,data.description)
                  else
-                 {MoveLocationsData[0].delivery_description = data.description}
+                 updateMoveLocationState(MoveLocationsData,setMoveLocationsData,
+                  data.description)
                  
                  GetPlaceLatLng(details.place_id)
 

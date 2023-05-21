@@ -118,9 +118,13 @@ const Splash = (props) => {
        console.log('test async')
        updateStates(userData,setUserData,User_Id.toString(),Username.toString(),null,null,null,null,null,Role.toString())
     
+      
+
+      //  GetProfessionalDetails()
        if(User_Id != null && User_Id != '') 
        {  
-         CheckUserActive(User_Id,null,null)
+        props.navigation.replace('Home')
+        //  CheckUserActive(User_Id,null,null)
        }
        else 
        {
@@ -128,12 +132,17 @@ const Splash = (props) => {
        }
 
     }
+    else 
+       {
+           props.navigation.replace('SignUpIn')
+       }
   }
 
   let CallNextScreen = ()=> { 
      console.log('LoginData.user_id',userData[0].user_id)
     if(userData[0].user_id != null && userData[0].user_id != '') 
     {  
+      
       CheckUserActive(userData[0].username,null,null)
     }
     else 

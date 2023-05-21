@@ -216,6 +216,15 @@ const App = (props) => {
 
             <GooglePlacesAutocomplete
               placeholder='Move To?'
+              requestUrl={{
+                useOnPlatform: 'all',
+                url:
+            'https://maps.googleapis.com/maps/api',
+                headers: {
+                'X-Android-Package': 'com.pikpak',
+                'X-Android-Cert': GoogleMaps.fingerPrint
+              }
+            }}
               onPress={(data, details = null) => {
                 // 'details' is provided when fetchDetails = true
                 console.log(data, details);

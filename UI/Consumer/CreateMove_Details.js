@@ -59,8 +59,10 @@ const CreateMove_Details = (props) => {
 
   useEffect(()=>{
 
-    
-     
+    setSrcLocation(MoveData[0].address_of_pickup)
+    setDestLocation(MoveData[0].address_of_delivery) 
+
+
   },[])
 
   let DecreaseSrcNumber=()=>

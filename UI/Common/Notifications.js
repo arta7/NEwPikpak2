@@ -101,7 +101,7 @@ const Notifications = (props) => {
 
 
    useEffect(()=>{
-    GetNotification()
+    // GetNotification()
    // ReadNotification()
    },[])
 

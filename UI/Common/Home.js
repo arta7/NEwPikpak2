@@ -110,9 +110,13 @@ const Home = (props) => {
   let getDirections = async(startLoc, destinationLoc)=> {
         try {
             const mode = 'driving'
-            let resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${startLoc}&destination=${destinationLoc}&key=${GoogleMaps.map_api_key}&mode=driving`)
+            let resp = await fetch(
+              `https://maps.googleapis.com/maps/api/directions/json?origin=$
+              {startLoc}&destination=${destinationLoc}&key=${GoogleMaps.map_api_key}&mode=driving`)
             // let resp = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${ startLoc }&destination=${ destinationLoc }`)
+         
             let respJson = await resp.json();
+            // console.log('respJson',respJson)
             let points = Polyline.decode(respJson.routes[0].overview_polyline.points);
             console.log('points\n')
             console.log(respJson.routes[0].overview_polyline.points)
@@ -166,13 +170,13 @@ const Home = (props) => {
             //  DefaultLocationData.default_latitude = pos.coords.latitude
             //  DefaultLocationData.default_longitude =   pos.coords.longitude
 
-             updateDefaultLocationState(DefaultLocationData,setDefaultLocationData, pos.coords.latitude,pos.coords.longitude)
+           var x =  updateDefaultLocationState(DefaultLocationData,setDefaultLocationData, pos.coords.latitude,pos.coords.longitude)
 
             // LocationData.current_latitude = pos.coords.latitude
             // LocationData.current_longitude =  pos.coords.longitude
 
 
-            updateLocationState(CurrentData,setCurrentData,pos.coords.latitude,pos.coords.longitude)
+          var zz =   updateLocationState(CurrentData,setCurrentData,pos.coords.latitude,pos.coords.longitude)
 
             setPosition({
               latitude: pos.coords.latitude,
@@ -214,9 +218,16 @@ const Home = (props) => {
       }
      }
     axios.get(APIMaster.GURL + 
-              APIMaster.GooglePlace.GetLatLng.replace('{placeid}', place_id).replace('{key}', GoogleMaps.map_api_key))
+              APIMaster.GooglePlace.GetLatLng.replace('{placeid}', place_id).replace('{key}', GoogleMaps.map_api_key),
+              {
+                headers: {
+                  'X-Android-Package': 'com.pikpak',
+            'X-Android-Cert': GoogleMaps.fingerPrint
+                }
+              })
     .then((result)=> {
 
+        console.log('result search bar ',result.data)
       if(result.data.status == 'OK')
       {
         ResetMoveData()
@@ -226,7 +237,8 @@ const Home = (props) => {
         // MoveLocationsData.delivery_latitude = result.data.result.geometry.location.lat
         // MoveLocationsData.delivery_longitude = result.data.result.geometry.location.lng
 
-        updateMoveLocationState(MoveLocationsData,setMoveLocationsData,null,result.data.result.geometry.location.lat,result.data.result.geometry.location.lng)
+        updateMoveLocationState(MoveLocationsData,setMoveLocationsData,null,
+          result.data.result.geometry.location.lat,result.data.result.geometry.location.lng)
 
 
         
@@ -235,9 +247,10 @@ const Home = (props) => {
         // DefaultLocationData.default_longitude = result.data.result.geometry.location.lng
 
 
-        updateDefaultLocationState(DefaultLocationData,setDefaultLocationData, result.data.result.geometry.location.lat,result.data.result.geometry.location.lng)
+        updateDefaultLocationState(DefaultLocationData,setDefaultLocationData, 
+          result.data.result.geometry.location.lat,result.data.result.geometry.location.lng)
 
-        SearchBar.current.setAddressText('')
+        // SearchBar.current.setAddressText('')
         
         props.navigation.navigate('CreateMove_Location', {move_id: 0})
       }
@@ -309,6 +322,7 @@ let ResetMoveData=()=>{
 }
 
   let LoadHistoryList= async()=> {
+    console.log('test history')
     SearchBar.current.setAddressText('')
 
     // let loc_history = await AsyncStorage.getItem("LocationHistory")
@@ -357,6 +371,7 @@ let ResetMoveData=()=>{
       //     requestlocation()
       //   }, 1000)
       // }
+      // console.log('GoogleMaps',GoogleMaps)
     }).catch((err) => {
           // console.log('data location error',err)
         })
@@ -394,7 +409,10 @@ let ResetMoveData=()=>{
 
 
   useEffect(()=>{
-    // console.log('ChangeState',props.navigation.getParam('ChangeState'))
+
+ 
+    // getDirections()
+    //console.log('ChangeState',props.navigation.getParam('ChangeState'))
     EnableLocation()
    
     let interval = setInterval(() => { 
@@ -403,8 +421,6 @@ let ResetMoveData=()=>{
       GetAvailableMoveList() ;
       if(userData[0].role == 'provider')
       GetProfessionalDetails()
-
-    
      // setCntr(cntr+1)
     }, 15000)
     
@@ -534,7 +550,7 @@ let ResetMoveData=()=>{
 
   let animateMap = () => {
      
-     console.log('mapView.current',mapView.current)
+    //  console.log('mapView.current',mapView.current)
     if(mapView.current != null)
     {
       if(CurrentData[0].current_latitude != 0)
@@ -639,11 +655,21 @@ let ResetMoveData=()=>{
 
           <GooglePlacesAutocomplete
             ref = {SearchBar}
+            requestUrl={{
+              useOnPlatform: 'all',
+              url:
+          'https://maps.googleapis.com/maps/api',
+              headers: {
+              'X-Android-Package': 'com.pikpak',
+              'X-Android-Cert': GoogleMaps.fingerPrint
+            }
+          }}
             placeholder='Move To?'
-            minLength={2}
+            minLength={4}
             autoFocus={false}
             returnKeyType={'default'}
             fetchDetails={true}
+            // onFail={error => console.error('error google map : ',error)}
             styles={{
               textInputContainer: {
                 backgroundColor: 'transparent'
@@ -664,15 +690,17 @@ let ResetMoveData=()=>{
                 color: '#1faadb',
               },
             }}
+            
             onPress={(data, details = null) => {
-              // ClearMoveLocationsData()
-
+              ClearMoveLocationsData()
+              console.log('details.data',data)
               // MoveLocationsData.delivery_description = data.description
 
+                  console.log('details.place_id',details.place_id)
 
-               updateMoveLocationState(MoveLocationsData,setMoveLocationsData,data.description)
+                updateMoveLocationState(MoveLocationsData,setMoveLocationsData,data.description)
               
-              GetPlaceLatLng(details.place_id)
+                GetPlaceLatLng(details.place_id)
 
             }}
             query={{
@@ -729,17 +757,21 @@ let ResetMoveData=()=>{
             
             renderItem={({item})=>(
 
-              <HistoryItem ItemTitle = {item.delivery_address} Function = {()=>{
-                console.log(item.delivery_address)}} Function={()=>{
+              <HistoryItem ItemTitle = {item.delivery_address}
+              // Function = {()=>{
+                Function={()=>{
+
                   ResetMoveData()
                   ResetEditMoveData()
                   ResetMoveLocationsData()
                  // MoveLocationsData.delivery_description = item.delivery_address
-
-                updateMoveLocationState(MoveLocationsData,setMoveLocationsData,item.delivery_address)
+                    console.log('history item',item)
+              var x =   updateMoveLocationState(MoveLocationsData,setMoveLocationsData,item.delivery_address)
 
                   GetPlaceLatLng(item.delivery_place_id)
-                setLocationHistory_Visible(false)}} />
+                setLocationHistory_Visible(false)
+              }}
+               />
               // <Text>123</Text>
               
             )}

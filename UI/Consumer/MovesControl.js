@@ -37,16 +37,16 @@ export default  MovesControl=(props)=>{
       VDData,setVDData } = React.useContext(BlogContext);
 
     useEffect(()=>{
-      GetNoticCount()
-        let interval = setInterval(() => { 
+      // GetNoticCount()
+      //   let interval = setInterval(() => { 
            
-          GetNoticCount()
-           // setCntr(cntr+1)
-          }, 15000);
+      //     GetNoticCount()
+      //      // setCntr(cntr+1)
+      //     }, 15000);
           
-           return(()=>{
-            clearInterval(interval)
-          })
+      //      return(()=>{
+      //       clearInterval(interval)
+      //     })
     
     },[])
 

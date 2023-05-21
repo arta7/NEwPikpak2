@@ -31,18 +31,18 @@ export default class MovesControls extends Component {
   
 componentDidMount()
 {
-  this.GetNoticCount()
- interval = setInterval(() => { 
+//   this.GetNoticCount()
+//  interval = setInterval(() => { 
      
-    this.GetNoticCount()
-     // setCntr(cntr+1)
-    }, 15000);
+//     this.GetNoticCount()
+//      // setCntr(cntr+1)
+//     }, 15000);
     
 
 }
 componentWillUnmount() {
   
-  clearInterval(interval)
+  // clearInterval(interval)
     console.log('setInterval cleared');
   }
 

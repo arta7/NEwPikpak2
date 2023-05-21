@@ -40,21 +40,21 @@ export default class ProviderMovesControl extends Component {
   
 componentDidMount()
 {
-  console.log('test page')
-this.setState({Dates:new Date()})
-  this.GetNoticCount()
-   interval = setInterval(() => { 
+//   console.log('test page')
+// this.setState({Dates:new Date()})
+//   this.GetNoticCount()
+//    interval = setInterval(() => { 
      
-    this.GetNoticCount()
-     // setCntr(cntr+1)
-    }, 15000);
+//     this.GetNoticCount()
+//      // setCntr(cntr+1)
+//     }, 15000);
     
   
 }
 
 componentWillUnmount() {
   
-clearInterval(interval)
+// clearInterval(interval)
   console.log('setInterval cleared');
 }
 
