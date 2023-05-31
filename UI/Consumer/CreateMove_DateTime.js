@@ -219,9 +219,11 @@ const CreateMove_DateTime = (props) => {
 
   let DataValidation=()=>{
    
+    console.log('SelectedStartDate',SelectedStartDate)
     // MoveData.time_of_pickup = DisplayTime
 
-      updateMoveState(MoveData,setMoveData,null,null,null,null,null,null,null,null,null,null,null,null,null,null,DisplayTime)
+      updateMoveState(MoveData,setMoveData,null,null,null,null,null,null,null
+        ,null,null,null,null,null,null,null,DisplayTime)
 
 
     console.log('Time: ', DisplayTime)
@@ -331,8 +333,9 @@ console.log('Date EditMoveData.date_of_pickup : ',SelectedStartDate._i.year , Ed
 //     padLeadingZeros(SelectedStartDate._i.month + 1, 2) + '-' +
 //     padLeadingZeros(SelectedStartDate._i.day, 2))
 //     props.navigation.push('CreateMove_Image', { _edit: false, _image_list: EditMoveData.move_images})
-
-    updateMoveState(MoveData,setMoveData,null,null,null,null,null,null,null,null,null,null,null,null,null,SelectedStartDate._i.year + '-' +
+   
+    updateMoveState(MoveData,setMoveData,null,null,null,null,null,
+      null,null,null,null,null,null,null,null,SelectedStartDate._i.year + '-' +
     padLeadingZeros(SelectedStartDate._i.month + 1, 2) + '-' +
     padLeadingZeros(SelectedStartDate._i.day, 2))
 

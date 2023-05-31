@@ -21,8 +21,7 @@ export async function  updateStates  (userData,setUserData,itemuserid,itemuserna
       status:itemstatus != null ? itemstatus : item.status,
       InlineStatus:itemInlineStatus != null ? itemInlineStatus : item.InlineStatus,
       badgeCount:itembadgeCount != null ? itembadgeCount : item.badgeCount,
-      CurrentPage:itemCurrentPage != null ? itemCurrentPage : item.CurrentPage
-      
+      CurrentPage:itemCurrentPage != null ? itemCurrentPage : item.CurrentPage      
     }
     }
   )
@@ -49,7 +48,8 @@ setCurrentData(newState)
 
 
 
-export  async function  updateMoveLocationState(MoveLocationsData,setMoveLocationsData,itemdeliverydescription,itemdeliverylatitude
+export  async function  updateMoveLocationState(MoveLocationsData,setMoveLocationsData,
+  itemdeliverydescription,itemdeliverylatitude
   ,itemdeliverylongitude,itempickupdescription,itempickuplatitude,itempickuplongitude,itemdistance)
    {
 

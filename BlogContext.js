@@ -1,10 +1,21 @@
-import React,{useState,useContext} from 'react';
+import React,{useState,useContext,useEffect} from 'react';
 
 
 const BlogContext = React.createContext();
 
+const useStateCallbackWrapper = (initilValue, callBack) => {
+  const [state, setState] = useState(initilValue);
+  useEffect(() => callBack(state), [state]);
+  return [state, setState];
+};
+
+const callBack = (state) => {
+ console.log("current state :  ", state);
+}
+
+
 export const BlogProvider = ({ children }) => {
-  const [userData, setUserData] = useState([
+  const [userData, setUserData] = useStateCallbackWrapper([
     {
         user_id: '',
         username: '',
@@ -23,18 +34,18 @@ export const BlogProvider = ({ children }) => {
         current_accuracy: 0
         }
       ]
-     );
+     ,callBack);
 
 
-     const [CurrentData, setCurrentData] = useState([
+     const [CurrentData, setCurrentData] = useStateCallbackWrapper([
       {
       current_latitude: 0,
       current_longitude: 0,
       current_accuracy: 0
       }
-     ])
+     ],callBack)
 
-     const [MoveLocationsData, setMoveLocationsData] = useState([
+     const [MoveLocationsData, setMoveLocationsData] = useStateCallbackWrapper([
       {
         delivery_description: '',
         delivery_latitude: 0,
@@ -44,15 +55,15 @@ export const BlogProvider = ({ children }) => {
         pickup_longitude: 0,
         distance: 0
       }
-     ])
+     ],callBack)
 
-     const [DefaultLocationData,setDefaultLocationData] = useState([
+     const [DefaultLocationData,setDefaultLocationData] = useStateCallbackWrapper([
       {
         default_latitude: 0,
         default_longitude: 0,
       }
-     ])
-     const [MoveData,setMoveData] =useState([
+     ],callBack)
+     const [MoveData,setMoveData] =useStateCallbackWrapper([
       {
         address_of_pickup : '',
         gps_of_pickup : '',
@@ -77,9 +88,9 @@ export const BlogProvider = ({ children }) => {
         move_bids : [],
         delivery_place_id : ''
       }
-     ])
+     ],callBack)
 
-     const [EditMoveData,setEditMoveData] = useState([
+     const [EditMoveData,setEditMoveData] = useStateCallbackWrapper([
       {
         address_of_pickup : '',
         gps_of_pickup : '',
@@ -96,10 +107,10 @@ export const BlogProvider = ({ children }) => {
         move_bids : []
         ,move_id:''
       }
-     ])
+     ],callBack)
 
 
-     const[CurrentMove,setCurrentMove] = useState([
+     const[CurrentMove,setCurrentMove] = useStateCallbackWrapper([
       {
         move_id : '',
         provider_move_details_header : 'off',
@@ -110,9 +121,9 @@ export const BlogProvider = ({ children }) => {
         pickup_latitude: 0,
         pickup_longitude: 0,
     }
-     ])
+     ],callBack)
 
-     const[PDData,setPDData] = useState([{
+     const[PDData,setPDData] = useStateCallbackWrapper([{
       organization_type : '',
     vehicle_id : '',
     make_id : '',
@@ -136,13 +147,13 @@ export const BlogProvider = ({ children }) => {
     max_weight : '',
     bed_length : '',
     address_2 : ''
-     }])
+     }],callBack)
 
      const[VDData,setVDData] = useState([
       {
         vehicle_id : ''
       }
-     ])
+     ],callBack)
 
 
   return (

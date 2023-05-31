@@ -256,7 +256,8 @@ const { userData,setUserData,CurrentData,setCurrentData,
   }
 
   let componentDidMount=()=> {
-   if(MoveLocationsData[0].pickup_description != '' && MoveLocationsData[0].delivery_description != '')
+
+    if(MoveLocationsData[0].pickup_description != '' && MoveLocationsData[0].delivery_description != '')
    {
     getDirections(MoveLocationsData[0].pickup_latitude.toString() + " , " + MoveLocationsData[0].pickup_longitude.toString() ,
     MoveLocationsData[0].delivery_latitude.toString() + " , " + MoveLocationsData[0].delivery_longitude.toString())
@@ -340,9 +341,24 @@ const { userData,setUserData,CurrentData,setCurrentData,
 
     componentDidMount();
 
+    if(MoveLocationsData[0]?.pickup_description!="" ||
+    MoveLocationsData[0]?.pickup_latitude!="" || MoveLocationsData[0]?.pickup_longitude!=0)
+    {
+      console.log('MoveLocationsData[0]?.pickup_description didmount',MoveLocationsData[0]?.pickup_description
+      ,'MoveLocationsData[0]?.pickup_latitude : ',MoveLocationsData[0]?.pickup_latitude)
+      setSrcLocation(MoveLocationsData[0]?.pickup_description)
+      setSrcLatitude(MoveLocationsData[0]?.pickup_latitude)
+      setSrcLongitude(MoveLocationsData[0]?.pickup_longitude)
+    }
+    else if(MoveLocationsData[0]?.delivery_description !="" ||
+     MoveLocationsData[0]?.delivery_latitude!="" || MoveLocationsData[0]?.delivery_longitude!=0 )
+    {
+
+    }
+
     
 
-    },[MoveLocationsData[0]?.pickup_description])
+    },[])
 
   let  _mapReady = () => {
       console.log("map ready");

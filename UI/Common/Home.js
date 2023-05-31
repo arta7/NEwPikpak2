@@ -232,7 +232,7 @@ const Home = (props) => {
       {
         ResetMoveData()
         ResetEditMoveData()
-        ResetMoveLocationsData()
+        // ResetMoveLocationsData()
 
         // MoveLocationsData.delivery_latitude = result.data.result.geometry.location.lat
         // MoveLocationsData.delivery_longitude = result.data.result.geometry.location.lng
@@ -694,9 +694,10 @@ let ResetMoveData=()=>{
             onPress={(data, details = null) => {
               ClearMoveLocationsData()
               console.log('details.data',data)
+
               // MoveLocationsData.delivery_description = data.description
 
-                  console.log('details.place_id',details.place_id)
+                  console.log(' data',data)
 
                 updateMoveLocationState(MoveLocationsData,setMoveLocationsData,data.description)
               

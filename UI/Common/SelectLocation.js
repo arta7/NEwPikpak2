@@ -43,65 +43,19 @@ const last_location = props.navigation.state.params.last_location
 
 const SearchBar = useRef(null)
 
-let UpdateControl1=async(data)=>{
+let UpdateControl1=async(data,details)=>{
   console.log('call id = ',call_id)
-                 if(call_id == 'src')
-                 {
-               var x=  await updateMoveLocationState(MoveLocationsData,setMoveLocationsData,
-                  null,null,null,data.description)
-                  console.log('pickup_description',MoveLocationsData[0]?.pickup_description,'x : ',x)
-                 }
-                 else
-                 {
-                var y = await updateMoveLocationState(MoveLocationsData,setMoveLocationsData,
-                  data.description)
-                  console.log('delivery_descriptionss',data.description,y)
-                 }
+              
+                
 }
 
 
-let UpdateControl=async(result)=>{
-  if(call_id == 'src')
-  {
-    // MoveLocationsData.pickup_latitude = result.data.result.geometry.location.lat
-    // MoveLocationsData.pickup_longitude = result.data.result.geometry.location.lng
-
-
-    console.log('MoveLocationsData[0].pickup_description',MoveLocationsData[0]?.pickup_description)
-    var x= await updateMoveLocationState(MoveLocationsData,setMoveLocationsData,null,null,null,null,
-      result.data.result.geometry.location.lat,result.data.result.geometry.location.lng)
-
-  }
-  else
-  {
-
-    // MoveLocationsData.delivery_latitude = result.data.result.geometry.location.lat
-    // MoveLocationsData.delivery_longitude = result.data.result.geometry.location.lng
-
-
-   var y = await updateMoveLocationState(MoveLocationsData,setMoveLocationsData,null,
-      result.data.result.geometry.location.lat,result.data.result.geometry.location.lng)
-
-    // MoveData.delivery_place_id = place_id
-
-   var z = await updateMoveState(MoveData,setMoveData,null,null,null,null,null,null,null,null,null,null
-      ,null,null,null,null,null,null,null,null,null,null,null,place_id)
-
-  }
-
-  var zz = await updateDefaultLocationState(DefaultLocationData,setDefaultLocationData,
-     result.data.result.geometry.location.lat ,result.data.result.geometry.location.lng)
-
+let UpdateControl=async(result,place_id)=>{
   
-     console.log('MoveLocationsData[0]1',MoveLocationsData)
-  props.navigation.replace('CreateMove_Location', {
-    move_id: props.navigation.state.params.move_id != null ? props.navigation.state.params.move_id:''
-   
-  })
 
 }
   
-let GetPlaceLatLng = async(place_id)=>{
+let GetPlaceLatLng = async(data,place_id)=>{
     
   var axiosConfig = {
     headers:{
@@ -119,20 +73,41 @@ let GetPlaceLatLng = async(place_id)=>{
             }
             )
     .then((result)=> {
-    
       if(result.data.status == 'OK')
       {
-        console.log('ok')
-        UpdateControl(result)
+        if(call_id == 'src')
+  {
+     updateMoveLocationState(MoveLocationsData,setMoveLocationsData,null,null,null,data.description,
+      result.data.result.geometry.location.lat,result.data.result.geometry.location.lng)
+
+  }
+  else
+  {
+
+    updateMoveLocationState(MoveLocationsData,setMoveLocationsData, data.description,
+      result.data.result.geometry.location.lat,result.data.result.geometry.location.lng)
+
+    updateMoveState(MoveData,setMoveData,null,null,null,null,null,null,null,null,null,null
+      ,null,null,null,null,null,null,null,null,null,null,null,place_id)
+
+  }
+
+   updateDefaultLocationState(DefaultLocationData,setDefaultLocationData,
+     result.data.result.geometry.location.lat ,result.data.result.geometry.location.lng)
+  props.navigation.replace('CreateMove_Location', {
+    move_id: props.navigation.state.params.move_id != null ? props.navigation.state.params.move_id:''
+   
+  })
+        // UpdateControl(result,place_id)
       }
       else
       {
-        console.log('result.data.status',result.data.status)
+        console.log('result.data.status lat long : ',result.data.status)
       }
 
     })
     .catch( (error)=> {
-      console.log('Error : ',error)  
+      console.log('Error get lat long : ',error)  
       
     })
   }
@@ -195,16 +170,19 @@ let GetPlaceLatLng = async(place_id)=>{
           }}
           onPress={(data, details = null) => {
 
+            // console.log('MoveLocationsData[0].delivery_description after 2 data :  '
+            // ,data)
             if(details != null && details != '')
-               {
-                  
+               {  
+
+                // console.log('MoveLocationsData[0].delivery_description after 1 data :  '
+                // ,data)
+                GetPlaceLatLng(data,details.place_id)
+                // UpdateControl1(data,details)
                 
-                UpdateControl1(data)
-                
-                console.log('MoveLocationsData[0].delivery_description after 1',MoveLocationsData[0]?.delivery_description)
-                //  {MoveLocationsData[0].delivery_description = data.description}
-                 
-                 GetPlaceLatLng(details.place_id)
+                // console.log('MoveLocationsData[0].delivery_description after 1',MoveLocationsData[0]?.delivery_description)
+                               
+               
 
                }
           }}
